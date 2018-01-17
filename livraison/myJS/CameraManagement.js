@@ -1,4 +1,12 @@
 
+if(typeof(ModulesLoader)=="undefined") {
+	throw "ModulesLoaderV2.js is required."; 
+}
+ModulesLoader.requireModules([
+	"myJS/NAVManagement.js"
+]);
+
+
 var cameras = {
 
 	embedded: {
@@ -52,7 +60,7 @@ var cameras = {
 				25:6, 26:6, 27:6, 28:6, 29:6
 			};
 			// Get the actual camera position according to the plane the car is in.
-			var cameraPosition = cameraPositions[cameraOfPlane[parseInt(arg.NAV.findActive(arg.NAV.x, arg.NAV.y))+1]];
+			var cameraPosition = cameraPositions[cameraOfPlane[NAVManagement.getCurrentPlane(arg.NAV)]];
 			arg.renderingEnvironment.camera.position.x = cameraPosition.x;
 			arg.renderingEnvironment.camera.position.y = cameraPosition.y;
 			arg.renderingEnvironment.camera.position.z = cameraPosition.z;

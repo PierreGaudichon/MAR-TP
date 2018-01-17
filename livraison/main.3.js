@@ -25,7 +25,8 @@ requirejs(['ModulesLoaderV2.js'], function() {
 		"FlyingVehicle.js"
 	]);
 	ModulesLoader.requireModules([
-		"myJS/CameraManagement.js"
+		"myJS/CameraManagement.js",
+		"myJS/NAVManagement.js"
 	]);
 	// Loads modules contained in includes and starts main function
 	ModulesLoader.loadModules(start) ;
