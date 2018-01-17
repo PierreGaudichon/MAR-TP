@@ -26,11 +26,29 @@ requirejs(['ModulesLoaderV2.js'], function() {
 	]);
 	ModulesLoader.requireModules([
 		"myJS/CameraManagement.js",
-		"myJS/NAVManagement.js"
+		"myJS/NAVManagement.js",
+		"myJS/SpeedManagement.js",
+		"myJS/DebugManagement.js"
 	]);
 	// Loads modules contained in includes and starts main function
 	ModulesLoader.loadModules(start) ;
 });
+
+
+
+
+
+/* ---------------------------------------------------------------------------
+
+	   DOM MANIPULATION
+	   
+--------------------------------------------------------------------------- */
+
+var $speed;
+
+function initDomElements() {
+	$speed = $(".speed");
+}
 
 
 
@@ -56,7 +74,6 @@ function createLoader(renderingEnvironment) {
 	// Return
 	return Loader;
 }
-
 
 function createLights(renderingEnvironment) {
 	return new ThreeLightingEnv('rembrandt','neutral','spot',renderingEnvironment,5000);
@@ -271,10 +288,17 @@ function start() {
 	}
 	
 	function render() { 
+		// make animation
 		requestAnimationFrame( render );
+		// given
 		handleKeys();
 		moveCar();
+		// custom
+		SpeedManagement.addPosition({x: NAV.x, y: NAV.y});
 		CameraManagement.render({ renderingEnvironment, vehicle, NAV, carGeometry });
+		DebugManagement.set({speed: SpeedManagement.speed()});
+		$speed.text(SpeedManagement.speed());
+		//DebugManagement.update();
 		renderingEnvironment.renderer.render(renderingEnvironment.scene, renderingEnvironment.camera); 
 	};
 	
@@ -286,5 +310,9 @@ function start() {
 	--------------------------------------------------------------------------- */
 	
 	CameraManagement.init({ renderingEnvironment, vehicle, NAV, carGeometry });
-	render(); 
+	$(function() {
+		initDomElements();
+		render(); 	
+	});
+	
 }
