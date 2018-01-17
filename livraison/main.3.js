@@ -127,6 +127,10 @@ function start()
 	NAV.addPlane(	new navPlane('p30', -240, -180, -140, -80,	+0,+20,'ny')); 		// 30			
 	NAV.setPos(CARx,CARy,CARz); 
 	NAV.initActive();
+	
+	// Camera Management
+	var theCameraShouldBeEmbedded = true;
+	
 	// DEBUG
 	//NAV.debug();
 	//var navMesh = NAV.toMesh();
@@ -137,7 +141,13 @@ function start()
 	window.addEventListener( 'resize', onWindowResize, false );
 	//	keyboard callbacks 
 	document.onkeydown = handleKeyDown;
-	document.onkeyup = handleKeyUp;					
+	document.onkeyup = handleKeyUp;		
+	
+	document.onkeypress = function(e) {
+		if(e.key == "p") { // (P)
+			theCameraShouldBeEmbedded = !theCameraShouldBeEmbedded;			
+		}
+	}			
 
 	//	callback functions
 	//	---------------------------------------------------------------------------
@@ -175,6 +185,56 @@ function start()
 	{
 		renderingEnvironment.onWindowResize(window.innerWidth,window.innerHeight);
 	}
+	
+	// Camera - over car
+	function hoveringCamera() {
+		renderingEnvironment.camera.position.x = NAV.x ;
+		renderingEnvironment.camera.position.y = NAV.y ;
+		renderingEnvironment.camera.position.z = NAV.z+50+vehicle.speed.length()*2;
+		renderingEnvironment.camera.rotation.x = 0;
+		renderingEnvironment.camera.rotation.y = 0;
+		renderingEnvironment.camera.rotation.z = vehicle.angles.z-Math.PI/2.0 ;
+	}
+	
+	function embeddedCamera() {
+		car3.add(RC.camera) ;
+		RC.camera.position.x = 0.0 ;
+		RC.camera.position.z = 10.0 ;
+		RC.camera.position.y = -25.0 ;
+		RC.camera.rotation.x = 85.0*3.14159/180.0 ;
+	}
+	
+	// Camera - fixed
+	function tvCamera() {
+		// Creates several cameras to cover all the track.
+		var cameraPositions = [
+			new THREE.Vector3(-280, 0, 60),
+			new THREE.Vector3(-100, 280, 100),
+			new THREE.Vector3(100, 160, 140),
+			new THREE.Vector3(220, 100, 100),
+			new THREE.Vector3(180, -260, 100),
+			new THREE.Vector3(-20, -40, 160),
+			new THREE.Vector3(-140,-280, 100)
+		];
+		// Associate a plane (part of the track) to a specific camera.
+		var cameraOfPlane = {
+			30:0,  1:0,  2:0,
+			 3:1,  4:1,  5:1,  6:1,
+			 7:2,  8:2,  9:2, 10:2,
+			11:3, 12:3, 13:3, 14:3,
+			15:4, 16:4, 17:4, 18:4, 19:4,
+			20:5, 21:5, 22:5, 23:5, 24:5,
+			25:6, 26:6, 27:6, 28:6, 29:6
+		};
+		// Get the actual camera position according to the plane the car is in.
+		var cameraPosition = cameraPositions[cameraOfPlane[parseInt(NAV.findActive(NAV.x, NAV.y))+1]];
+		renderingEnvironment.camera.position.x = cameraPosition.x;
+		renderingEnvironment.camera.position.y = cameraPosition.y;
+		renderingEnvironment.camera.position.z = cameraPosition.z;
+		// Set the rotation of the camera so it look at the car.
+		renderingEnvironment.camera.up = new THREE.Vector3(0, 0, 1);
+		renderingEnvironment.camera.lookAt(NAV);
+	}
 
 	function render() { 
 		requestAnimationFrame( render );
@@ -200,12 +260,13 @@ function start()
 		carFloorSlope.matrix.copy(NAV.localMatrix(CARx,CARy));
 		// Updates carRotationZ
 		carRotationZ.rotation.z = vehicle.angles.z-Math.PI/2.0 ;
-		// Camera
-		renderingEnvironment.camera.position.x = NAV.x ;
-		renderingEnvironment.camera.position.y = NAV.y ;
-		renderingEnvironment.camera.position.z = NAV.z+50+vehicle.speed.length()*2 ;
-		console.log(vehicle.speed.z) ;
-//		renderingEnvironment.camera.rotation.z = vehicle.angles.z-Math.PI/2.0 ;
+		
+		if(theCameraShouldBeEmbedded) {
+			embeddedCamera();
+		} else {
+			tvCamera();
+		}
+
 		// Rendering
 		renderingEnvironment.renderer.render(renderingEnvironment.scene, renderingEnvironment.camera); 
 	};

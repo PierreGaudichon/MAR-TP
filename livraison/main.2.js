@@ -196,7 +196,7 @@ function start(){
 		car1.matrixAutoUpdate = false;		
 		car1.matrix.copy(NAV.localMatrix(CARx,CARy));
 		// Updates car2
-		car2.rotation.z = vehicle.angles.z-Math.PI/2.0 ;
+		car2.rotation.z = vehicle.angles.z-Math.PI/2.0;
 		// Rendering
 		RC.renderer.render(RC.scene, RC.camera); 
 	};
