@@ -2,68 +2,66 @@
  *  ThreeJS test file using the ThreeRender class
  */
 
-//Loads all dependencies
-requirejs(['ModulesLoaderV2.js'], function()
-		{ 
-			// Level 0 includes
-			ModulesLoader.requireModules(["threejs/three.min.js"]) ;
-			ModulesLoader.requireModules([ "theirJS/ThreeRenderingEnv.js", 
-			                              "theirJS/ThreeLightingEnv.js", 
-			                              "theirJS/ThreeLoadingEnv.js", 
-			                              "theirJS/navZ.js",
-			                              "FlyingVehicle.js"]) ;
-			ModulesLoader.requireModules([
-				"myJS/CameraManagement.js"
-			]);
-			// Loads modules contained in includes and starts main function
-			ModulesLoader.loadModules(start) ;
-		}
-) ;
 
-function start()
-{
-	//	----------------------------------------------------------------------------
-	//	MAR 2014 - nav test
-	//	author(s) : Cozot, R. and Lamarche, F.
-	//	date : 11/16/2014
-	//	last : 11/25/2014
-	//	---------------------------------------------------------------------------- 			
-	//	global vars
-	//	----------------------------------------------------------------------------
-	//	keyPressed
-	var currentlyPressedKeys = {};
+
+
+
+/* ---------------------------------------------------------------------------
+
+	   DEPENDENCIES
+	   
+--------------------------------------------------------------------------- */
 	
-	// car Position
-	var CARx = -220; 
-	var CARy = 0 ; 
-	var CARz = 0 ;
-	var CARtheta = 0 ; 
+requirejs(['ModulesLoaderV2.js'], function() { 
+	// Level 0 includes
+	ModulesLoader.requireModules([
+		"threejs/three.min.js"
+	]);
+	ModulesLoader.requireModules([
+		"theirJS/ThreeRenderingEnv.js",
+		"theirJS/ThreeLightingEnv.js", 
+		"theirJS/ThreeLoadingEnv.js", 
+		"theirJS/navZ.js",
+		"FlyingVehicle.js"
+	]);
+	ModulesLoader.requireModules([
+		"myJS/CameraManagement.js"
+	]);
+	// Loads modules contained in includes and starts main function
+	ModulesLoader.loadModules(start) ;
+});
 
-	// Creates the vehicle (handled by physics)
-	var vehicle = new FlyingVehicle(
-			{
-				position: new THREE.Vector3(CARx, CARy, CARz),
-				zAngle : CARtheta+Math.PI/2.0,
-			}
-			) ;
-	
-	//	rendering env
-	var renderingEnvironment =  new ThreeRenderingEnv();
 
-	//	lighting env
-	var Lights = new ThreeLightingEnv('rembrandt','neutral','spot',renderingEnvironment,5000);
 
+
+
+/* ---------------------------------------------------------------------------
+
+	   CREATE FUNCTIONS
+	   
+--------------------------------------------------------------------------- */
+
+function createLoader(renderingEnvironment) {
 	//	Loading env
 	var Loader = new ThreeLoadingEnv();
-
 	//	Meshes
 	Loader.loadMesh('assets','border_Zup_02','obj',	renderingEnvironment.scene,'border',	-340,-340,0,'front');
 	Loader.loadMesh('assets','ground_Zup_03','obj',	renderingEnvironment.scene,'ground',	-340,-340,0,'front');
 	Loader.loadMesh('assets','circuit_Zup_02','obj',renderingEnvironment.scene,'circuit',	-340,-340,0,'front');
 	//Loader.loadMesh('assets','tree_Zup_02','obj',	renderingEnvironment.scene,'trees',	-340,-340,0,'double');
 	Loader.loadMesh('assets','arrivee_Zup_01','obj',	renderingEnvironment.scene,'decors',	-340,-340,0,'front');
-		
-	//	Car
+	//	Skybox
+	Loader.loadSkyBox('assets/maps',['px','nx','py','ny','pz','nz'],'jpg', renderingEnvironment.scene, 'sky',4000);
+	// Return
+	return Loader;
+}
+
+
+function createLights(renderingEnvironment) {
+	return new ThreeLightingEnv('rembrandt','neutral','spot',renderingEnvironment,5000);
+}
+
+function createCarPosition(renderingEnvironment, CARx, CARy, CARz) {
 	// car Translation
 	var carPosition = new THREE.Object3D(); 
 	carPosition.name = 'car0'; 
@@ -72,33 +70,32 @@ function start()
 	carPosition.position.x = CARx;
 	carPosition.position.y = CARy;
 	carPosition.position.z = CARz;
-	// car Rotation floor slope follow
+	return carPosition;
+}
+
+function createCarFloorSlope(carPosition) {
 	var carFloorSlope = new THREE.Object3D(); 
 	carFloorSlope.name = 'car1';
 	carPosition.add(carFloorSlope);
-	// car vertical rotation
+	return carFloorSlope;
+}
+
+function createCarRotationZ(carFloorSlope, CARtheta) {
 	var carRotationZ = new THREE.Object3D(); 
 	carRotationZ.name = 'car2';
 	carFloorSlope.add(carRotationZ);
-	carRotationZ.rotation.z = CARtheta ;
-	// the car itself 
-	// simple method to load an object
-	var carGeometry = Loader.load({filename: 'assets/car_Zup_01.obj', node: carRotationZ, name: 'car3'}) ;
-	carGeometry.position.z= +0.25 ;
-	// attach the scene camera to car
-//	carGeometry.add(renderingEnvironment.camera) ;
-//	renderingEnvironment.camera.position.x = 0.0 ;
-//	renderingEnvironment.camera.position.z = 10.0 ;
-//	renderingEnvironment.camera.position.y = -25.0 ;
-//	renderingEnvironment.camera.rotation.x = 85.0*3.14159/180.0 ;
-		
-	//	Skybox
-	Loader.loadSkyBox('assets/maps',['px','nx','py','ny','pz','nz'],'jpg', renderingEnvironment.scene, 'sky',4000);
+	carRotationZ.rotation.z = CARtheta;
+	return carRotationZ;
+}
 
-	//	Planes Set for Navigation 
-	// 	z up 
-	var NAV = new navPlaneSet(
-					new navPlane('p01',	-260, -180,	 -80, 120,	+0,+0,'px')); 		// 01	
+function createCarGeometry(Loader, carRotationZ) {
+	var carGeometry = Loader.load({filename: 'assets/car_Zup_01.obj', node: carRotationZ, name: 'car3'}) ;
+	carGeometry.position.z= +0.25;
+	return carGeometry;
+}
+
+function createNAV(CARx, CARy, CARz) {
+	var NAV = new navPlaneSet(new navPlane('p01',	-260, -180,	 -80, 120,	+0,+0,'px')); 		// 01	
 	NAV.addPlane(	new navPlane('p02', -260, -180,	 120, 200,	+0,+20,'py')); 		// 02		
 	NAV.addPlane(	new navPlane('p03', -260, -240,	 200, 240,	+20,+20,'px')); 	// 03		
 	NAV.addPlane(	new navPlane('p04', -240, -160,  200, 260,	+20,+20,'px')); 	// 04		
@@ -130,21 +127,90 @@ function start()
 	NAV.addPlane(	new navPlane('p30', -240, -180, -140, -80,	+0,+20,'ny')); 		// 30			
 	NAV.setPos(CARx,CARy,CARz); 
 	NAV.initActive();
+	return NAV;
+}
+
+
+
+
+
+/* ---------------------------------------------------------------------------
+
+	   MAIN
+	   
+--------------------------------------------------------------------------- */
+
+//	--------------------------------------------------------------------------
+//	MAR 2014 - nav test
+//	author(s) : Cozot, R. and Lamarche, F.
+//  edits : Gaudichon, P.
+//	date : 11/16/2014
+//	last : 17 Jan 2018
+//	--------------------------------------------------------------------------
 	
-	// Camera Management
-	var theCameraShouldBeEmbedded = true;
+function start() {
+			
+	//	global vars
+	//	--------------------------------------------------------------------------
+	//	keyPressed
+	var currentlyPressedKeys = {};
 	
-	// DEBUG
+	// car Position
+	var CARx = -220; 
+	var CARy = 0; 
+	var CARz = 0;
+	var CARtheta = 0; 
+
+	// Creates the vehicle (handled by physics)
+	var vehicle = new FlyingVehicle({
+		position: new THREE.Vector3(CARx, CARy, CARz),
+		zAngle : CARtheta + Math.PI/2,
+	});
+	
+	//	rendering env
+	var renderingEnvironment =  new ThreeRenderingEnv();
+	var Lights = createLights(renderingEnvironment);
+	var Loader = createLoader(renderingEnvironment);
+	
+	// Car
+	var carPosition = createCarPosition(renderingEnvironment, CARx, CARy, CARz);
+	var carFloorSlope = createCarFloorSlope(carPosition);
+	var carRotationZ = createCarRotationZ(carFloorSlope, CARtheta);
+	var carGeometry = createCarGeometry(Loader, carRotationZ);
+		
+	//	Planes Set for Navigation 
+	var NAV = createNAV(CARx, CARy, CARz);
+	
+	
+	/* ---------------------------------------------------------------------------
+	
+		   DEBUG
+		   
+	--------------------------------------------------------------------------- */
+	
 	//NAV.debug();
 	//var navMesh = NAV.toMesh();
 	//renderingEnvironment.addToScene(navMesh);
-	//	event listener
-	//	---------------------------------------------------------------------------
+	
+	/* ---------------------------------------------------------------------------
+	
+		   EVENT LISTENER
+		   
+	--------------------------------------------------------------------------- */
+	
 	//	resize window
-	window.addEventListener( 'resize', onWindowResize, false );
+	window.addEventListener( 'resize', function() {
+		renderingEnvironment.onWindowResize(window.innerWidth,window.innerHeight);
+	}, false );
+	
 	//	keyboard callbacks 
-	document.onkeydown = handleKeyDown;
-	document.onkeyup = handleKeyUp;		
+	document.onkeydown = function(event) {
+		currentlyPressedKeys[event.keyCode] = true;
+	};
+	
+	document.onkeyup = function(event) {
+		currentlyPressedKeys[event.keyCode] = false;
+	};		
 	
 	document.onkeypress = function(e) {
 		if(e.key == "p") { // (P)
@@ -152,46 +218,34 @@ function start()
 		}
 	}			
 
-	//	callback functions
-	//	---------------------------------------------------------------------------
-	function handleKeyDown(event) { currentlyPressedKeys[event.keyCode] = true;}
-	function handleKeyUp(event) {currentlyPressedKeys[event.keyCode] = false;}
+	/* ---------------------------------------------------------------------------
+	
+		   RENDER FUNCTIONS
+		   
+	--------------------------------------------------------------------------- */
 
 	function handleKeys() {
-		if (currentlyPressedKeys[67]) // (C) debug
-		{
+		if (currentlyPressedKeys[67]) { // (C) debug
 			// debug scene
 			renderingEnvironment.scene.traverse(function(o){
 				console.log('object:'+o.name+'>'+o.id+'::'+o.type);
 			});
 		}				
-		if (currentlyPressedKeys[68]) // (D) Right
-		{
-			vehicle.turnRight(1000) ;
+		if (currentlyPressedKeys[68]) { // (D) Right
+			vehicle.turnRight(1000);
 		}
-		if (currentlyPressedKeys[81]) // (Q) Left 
-		{		
-			vehicle.turnLeft(1000) ;
+		if (currentlyPressedKeys[81]) { // (Q) Left 
+			vehicle.turnLeft(1000);
 		}
-		if (currentlyPressedKeys[90]) // (Z) Up
-		{
-			vehicle.goFront(1200, 1200) ;
+		if (currentlyPressedKeys[90]) { // (Z) Up
+			vehicle.goFront(1200, 1200);
 		}
-		if (currentlyPressedKeys[83]) // (S) Down 
-		{
-			vehicle.brake(100) ;
+		if (currentlyPressedKeys[83]) { // (S) Down 
+			vehicle.brake(100);
 		}
-	}
-
-	//	window resize
-	function  onWindowResize() 
-	{
-		renderingEnvironment.onWindowResize(window.innerWidth,window.innerHeight);
 	}
 	
-	function render() { 
-		requestAnimationFrame( render );
-		handleKeys();
+	function moveCar() {
 		// Vehicle stabilization 
 		vehicle.goUp(vehicle.weight()/4.0, vehicle.weight()/4.0, vehicle.weight()/4.0, vehicle.weight()/4.0) ;
 		vehicle.stopAngularSpeedsXY() ;
@@ -213,14 +267,23 @@ function start()
 		carFloorSlope.matrix.copy(NAV.localMatrix(CARx,CARy));
 		// Updates carRotationZ
 		carRotationZ.rotation.z = vehicle.angles.z-Math.PI/2.0 ;
-		
+	}
+	
+	function render() { 
+		requestAnimationFrame( render );
+		handleKeys();
+		moveCar();
 		CameraManagement.render({ renderingEnvironment, vehicle, NAV, carGeometry });
-
-		// Rendering
 		renderingEnvironment.renderer.render(renderingEnvironment.scene, renderingEnvironment.camera); 
 	};
 	
+	
+	/* ---------------------------------------------------------------------------
+	
+		   INITIALIZATION
+		   
+	--------------------------------------------------------------------------- */
+	
 	CameraManagement.init({ renderingEnvironment, vehicle, NAV, carGeometry });
-
 	render(); 
 }
