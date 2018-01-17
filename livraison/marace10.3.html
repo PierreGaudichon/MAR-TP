@@ -3,7 +3,29 @@
 		<title>MAR 2014 - maRace RC&FL</title> 
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-		<style> body { margin: 0; } canvas { width: 100%; height: 100% } </style> 
+		<style>
+			body {
+				margin: 0;
+			}
+			canvas {
+				width: 100%; height: 100%
+			}
+			#chart {
+				position: absolute;
+				bottom: 0;
+				right: 0;
+			}
+			#wrong-direction {
+				position: absolute;
+				top: 50px;
+				width: 500px;
+				text-align: center;
+				font-size: 50px;
+				color: red;
+				text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+				opacity: 0;
+			}
+			</style> 
 	</head> 
 	<body>
 		<script
@@ -14,6 +36,7 @@
 		<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 		<script data-main="main.3.js" src="lib/require.js"></script>
 		
-		<div class="speed"></div>
+		<div id="chart"></div>
+		<div id="wrong-direction">Wrong Direction</div>
 	</body>
 </html>

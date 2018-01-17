@@ -3,7 +3,7 @@
 // RC
 //----------------------------------------------------------------------------------------
 
-if(typeof(ModulesLoader)=="undefined")
+ if(typeof(ModulesLoader)=="undefined")
 {
 	throw "ModulesLoaderV2.js is required to load script ThreeLoadingEnv.js" ; 
 }
