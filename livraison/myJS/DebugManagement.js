@@ -2,14 +2,25 @@
 
 DebugManagement = {};
 
-var toBeLogged = {};
+
+var debug = new Vue({
+  el: '#debug',
+  data: {
+		logs: {},
+		enabled: false
+	}
+});
 
 DebugManagement.set = function(stuff) {
 	Object.keys(stuff).forEach(function(key) {
-		toBeLogged[key] = stuff[key];
+		Vue.set(debug.logs, key, stuff[key]);
 	});
 }
 
-DebugManagement.update = function() {
-	console.log(toBeLogged);
+DebugManagement.toggle = function(bool) {
+	if(bool !== undefined) {
+		debug.enabled = bool;
+	} else {
+		debug.enabled = !debug.enabled
+	} 
 }

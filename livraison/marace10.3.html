@@ -25,6 +25,33 @@
 				text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 				opacity: 0;
 			}
+			#win {
+				position: absolute;
+				top: 150px;
+				width: 500px;
+				text-align: center;
+				font-size: 50px;
+				color: green;
+				text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+				opacity: 0;
+			}
+			#laps-counter {
+				position: absolute;
+				bottom: 20px;
+				left: 20px;
+				font-size: 30px;
+				color: white;
+				text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+			}
+			#debug {
+				position: absolute;
+				color: white;
+				text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+				font-size: 9px;
+			}
+			#debug ul {
+				list-style: none;
+			}
 			</style> 
 	</head> 
 	<body>
@@ -34,9 +61,22 @@
 		  crossorigin="anonymous">
 		</script>
 		<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+		
 		<script data-main="main.3.js" src="lib/require.js"></script>
 		
 		<div id="chart"></div>
 		<div id="wrong-direction">Wrong Direction</div>
+		<div id="win">Win !</div>
+		<div id="laps-counter"></div>
+		
+		<div id="debug">
+			<ul v-if="enabled">
+				<li v-for="(log, key) in logs">
+					<b>{{ key }}</b> : {{ log }} 
+				</li>
+			</ul>
+		</div>
+		
 	</body>
 </html>

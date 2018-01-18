@@ -7,6 +7,11 @@ ModulesLoader.requireModules([
 ]);
 
 
+CameraManagement = {};
+
+
+(function() {
+
 var cameras = {
 
 	embedded: {
@@ -68,6 +73,17 @@ var cameras = {
 			arg.renderingEnvironment.camera.up = new THREE.Vector3(0, 0, 1);
 			arg.renderingEnvironment.camera.lookAt(arg.NAV);
 		}
+	},
+	
+	master: {
+		load: function(arg) {
+			arg.renderingEnvironment.camera.position.x = 0;
+			arg.renderingEnvironment.camera.position.y = 0;
+			arg.renderingEnvironment.camera.position.z = 460;
+			arg.renderingEnvironment.camera.rotation.x = 0;
+			arg.renderingEnvironment.camera.rotation.y = 0;
+			arg.renderingEnvironment.camera.rotation.z = 0;
+		}
 	}
 };
 
@@ -75,7 +91,7 @@ var cameras = {
 var currentIndex = -1;
 var currentCamera = {};
 
-CameraManagement = {}
+
 
 CameraManagement.init = function(arg) {
 	CameraManagement.switch(arg);
@@ -104,4 +120,5 @@ CameraManagement.switch = function(arg) {
 
 CameraManagement.render = function() {};
 
+})();
 

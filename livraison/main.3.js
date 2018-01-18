@@ -29,7 +29,8 @@ requirejs(['ModulesLoaderV2.js'], function() {
 		"myJS/NAVManagement.js",
 		"myJS/SpeedManagement.js",
 		"myJS/DebugManagement.js",
-		"myJS/CheckPointManagement.js"
+		"myJS/CheckPointManagement.js",
+		"myJS/LapManagement.js"
 	]);
 	// Loads modules contained in includes and starts main function
 	ModulesLoader.loadModules(start) ;
@@ -50,10 +51,14 @@ google.charts.load('current', {'packages':['gauge']});
 
 var $chart;
 var $wrongDirection;
+var $lapsCounter;
+var $win;
 
 function initDomElements() {
 	$chart = $("#chart");
 	$wrongDirection = $("#wrong-direction");
+	$lapsCounter = $("#laps-counter");
+	$win = $("#win");
 }
 
 
@@ -221,10 +226,10 @@ function handleKeys(arg) {
 		});
 	}				
 	if (arg.currentlyPressedKeys[68]) { // (D) Right
-		arg.vehicle.turnRight(1000);
+		arg.vehicle.turnRight(2000);
 	}
 	if (arg.currentlyPressedKeys[81]) { // (Q) Left 
-		arg.vehicle.turnLeft(1000);
+		arg.vehicle.turnLeft(2000);
 	}
 	if (arg.currentlyPressedKeys[90]) { // (Z) Up
 		arg.vehicle.goFront(1200, 1200);
@@ -272,11 +277,16 @@ function render(arg) {
 	CheckPointManagement.tick(arg.NAV);
 	SpeedManagement.addPosition({x: arg.NAV.x, y: arg.NAV.y});
 	CameraManagement.render(arg);
-	DebugManagement.set({speed: SpeedManagement.speed()});
+	GhostTrack.add({x: arg.NAV.x, y: arg.NAV.y});
+	
 	arg.chartData.setValue(0, 1, SpeedManagement.speed());
 	arg.chart.draw(arg.chartData, arg.chartOptions);
-	//$speed.text(SpeedManagement.speed());
-	//DebugManagement.update();
+	
+	DebugManagement.set({"car.speed": SpeedManagement.speed()});
+	DebugManagement.set({"car.x": arg.NAV.x});
+	DebugManagement.set({"car.y": arg.NAV.y});
+	DebugManagement.set({"car.z": arg.NAV.z});
+
 	arg.renderingEnvironment.renderer.render(
 			arg.renderingEnvironment.scene,
 			arg.renderingEnvironment.camera); 
@@ -305,6 +315,8 @@ function setListeners(arg) {
 	function onKeyPress(e) {
 		if(e.key == "p") { // (P)
 			CameraManagement.switch(arg);
+		} else if(e.key == "c") {
+			DebugManagement.toggle();
 		}
 	}
 	window.addEventListener( 'resize', onResize, false );
@@ -376,9 +388,13 @@ function start() {
 	// Events
 	setListeners(arg);	
 	
-	CheckPointManagement.onPlaneEntry(2, function() {
-		console.log("lap finished");
+	LapManagement.onLapFinished(function(n) {
+		$lapsCounter.text(n + " / " + MAX_LAPS);
 	});
+	
+	LapManagement.onFinished(function(n) {
+		$win.css("opacity", 1);
+	})
 	
 	CheckPointManagement.onWrongDirection(function() {
 		$wrongDirection.css("opacity", 1);
@@ -389,8 +405,10 @@ function start() {
 	
 	// Init
 	CameraManagement.init(arg);
+	DebugManagement.toggle(true);
 	$(function() {
 		initDomElements();
+		$lapsCounter.text("0 / " + MAX_LAPS);
 		render(arg); 	
 	});
 	
