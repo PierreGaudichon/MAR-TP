@@ -3,6 +3,8 @@
 DebugManagement = {};
 
 
+(function() {
+
 var debug = new Vue({
   el: '#debug',
   data: {
@@ -24,3 +26,5 @@ DebugManagement.toggle = function(bool) {
 		debug.enabled = !debug.enabled
 	} 
 }
+
+})();

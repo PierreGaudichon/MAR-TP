@@ -8,7 +8,13 @@ ModulesLoader.requireModules([
 ]);
 
 
-var MAX_LAPS = 2;
+LapManagement = {};
+
+
+(function() {
+
+
+LapManagement.MAX_LAPS = 2;
 
 var onLapFinisheds = [];
 var onFinisheds = [];
@@ -20,11 +26,10 @@ DebugManagement.set({
 	"lap.nbs": laps,
 	"lap.15_checkpoint": false,
 	"lap.course_over": false,
-	"lap.max_laps": MAX_LAPS
+	"lap.max_laps": LapManagement.MAX_LAPS
 });
 			
 
-LapManagement = {}
 
 LapManagement.onLapFinished = function(fun) {
 	onLapFinisheds.push(fun);
@@ -42,7 +47,7 @@ CheckPointManagement.onPlaneEntry(2, function() {
 		DebugManagement.set({"lap.nbs": laps});
 		onLapFinisheds.forEach(function(fun) { fun(laps); });
 		
-		if(laps >= MAX_LAPS) {
+		if(laps >= LapManagement.MAX_LAPS) {
 			DebugManagement.set({"lap.course_over": true});
 			onFinisheds.forEach(function(fun) { fun(laps); });
 		}
@@ -53,4 +58,7 @@ CheckPointManagement.onPlaneEntry(2, function() {
 CheckPointManagement.onPlaneEntry(15, function() {
 	otherSideOk = true;
 	DebugManagement.set({"lap.15_checkpoint": true});
-})
+});
+
+
+})();

@@ -30,7 +30,8 @@ requirejs(['ModulesLoaderV2.js'], function() {
 		"myJS/SpeedManagement.js",
 		"myJS/DebugManagement.js",
 		"myJS/CheckPointManagement.js",
-		"myJS/LapManagement.js"
+		"myJS/LapManagement.js",
+		"myJS/GhostTrack.js"
 	]);
 	// Loads modules contained in includes and starts main function
 	ModulesLoader.loadModules(start) ;
@@ -361,6 +362,10 @@ function start() {
 	var NAV = createNAV(CARx, CARy, CARz);
 	
 	// Car
+	/*var car = new Car(
+			{CARx, CARy, CARz, CARtheta},
+			{renderingEnvironment, Loader}
+	);*/
 	var vehicle = createVehicle(CARx, CARy, CARz, CARtheta);
 	var carPosition = createCarPosition(renderingEnvironment, CARx, CARy, CARz);
 	var carFloorSlope = createCarFloorSlope(carPosition);
@@ -408,7 +413,7 @@ function start() {
 	DebugManagement.toggle(true);
 	$(function() {
 		initDomElements();
-		$lapsCounter.text("0 / " + MAX_LAPS);
+		$lapsCounter.text("0 / " + LapManagement.MAX_LAPS);
 		render(arg); 	
 	});
 	

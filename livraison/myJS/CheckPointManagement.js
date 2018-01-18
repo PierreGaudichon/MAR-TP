@@ -7,16 +7,14 @@ ModulesLoader.requireModules([
 ]);
 
 
+CheckPointManagement = {};
+
+
+(function() {
 
 var allPlanes = [];
 var checkPoints = {};
 var onWrongDirection = function() {};
-
-
-
-CheckPointManagement = {};
-
-
 
 
 CheckPointManagement.onWrongDirection = function(fun) {
@@ -56,8 +54,6 @@ CheckPointManagement.tick = function(NAV) {
 			checkPoints[plane].forEach(function(fun) { fun(); });
 		}
 	}
-	
-	
-	
-	
 }
+
+})();
