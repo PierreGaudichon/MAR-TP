@@ -7,10 +7,10 @@ requirejs(['ModulesLoaderV2.js'], function()
 		{ 
 			// Level 0 includes
 			ModulesLoader.requireModules(["threejs/three.min.js"]) ;
-			ModulesLoader.requireModules([ "myJS/ThreeRenderingEnv.js", 
-			                              "myJS/ThreeLightingEnv.js", 
-			                              "myJS/ThreeLoadingEnv.js", 
-			                              "myJS/navZ.js",
+			ModulesLoader.requireModules([ "theirJS/ThreeRenderingEnv.js", 
+			                              "theirJS/ThreeLightingEnv.js", 
+			                              "theirJS/ThreeLoadingEnv.js", 
+			                              "theirJS/navZ.js",
 			                              "FlyingVehicle.js"]) ;
 			// Loads modules contained in includes and starts main function
 			ModulesLoader.loadModules(start) ;
