@@ -3,7 +3,8 @@ if(typeof(ModulesLoader)=="undefined") {
 	throw "ModulesLoaderV2.js is required."; 
 }
 ModulesLoader.requireModules([
-	"myJS/Car.js"
+	"myJS/Car.js",
+	"myJS/DebugManagement.js"
 ]);
 
 
@@ -32,6 +33,17 @@ GhostTrack.move = function() {
 	ghosts.forEach(function(ghost) {
 		ghost.move();
 	});
+}
+
+
+GhostTrack.loadGhosts = function() {
+	DebugManagement.set({"ghosts.number": localStorage.length});
+	for(var i = 0; i < localStorage.length; i++) {
+		GhostTrack.register(
+				JSON.parse(localStorage.getItem(localStorage.key(i))),
+				{ renderingEnvironment, Loader }
+		);
+	}
 }
 
 

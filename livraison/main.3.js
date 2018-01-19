@@ -315,13 +315,8 @@ function start() {
 	};
 	
 	// ghosts
-	DebugManagement.set({"ghosts.number": localStorage.length});
-	for(var i = 0; i < localStorage.length; i++) {
-		GhostTrack.register(
-				JSON.parse(localStorage.getItem(localStorage.key(i))),
-				{ renderingEnvironment, Loader }
-		);
-	}
+	GhostTrack.loadGhosts();
+	
 	
 	// Debug	
 	//NAV.debug();
