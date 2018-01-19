@@ -40,7 +40,7 @@ class Propeller {
 		this.blades = [
 			new Blade({ theta: 0 }, { propeller: this, Loader }),
 			new Blade({ theta: 2*Math.PI/3 }, { propeller: this, Loader }),
-			new Blade({ theta: -2*Math.PI/3 }, { propeller: this, Loader })
+			new Blade({ theta: 4*Math.PI/3 }, { propeller: this, Loader })
 		];
 		
 		
@@ -109,7 +109,7 @@ Blade.ANGULAR_SPEED = 1; // rotation per second
 	
 Helico = class Helico {
 	
-	constructor({}, {renderingEnvironment, Loader}) {
+	constructor({x, y, z}, {renderingEnvironment, Loader}) {
 		
 		// id
 		this.id = maxId++;
@@ -119,8 +119,9 @@ Helico = class Helico {
 		this.position.name = `helico-${this.id}:position`;
 		renderingEnvironment.addToScene(this.position);
 		
-		this.position.rotation.x = -Math.PI/2;
-		this.position.rotation.z = Math.PI;
+		this.setPosition({x, y, z});
+		//this.position.rotation.x = -Math.PI/2;
+		//this.position.rotation.z = Math.PI;
 		
 		// corp
 		this.corp = Loader.load({
@@ -146,6 +147,12 @@ Helico = class Helico {
 			{ rotating: false }
 		);
 		
+	}
+	
+	setPosition({x, y, z}) {
+		if(x != undefined) { this.position.position.x = x; }
+		if(y != undefined) { this.position.position.y = y; }
+		if(z != undefined) { this.position.position.z = z; }
 	}
 	
 	tick() {

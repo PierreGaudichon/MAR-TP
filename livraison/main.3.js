@@ -32,7 +32,8 @@ requirejs(['ModulesLoaderV2.js'], function() {
 		"myJS/CheckPointManagement.js",
 		"myJS/LapManagement.js",
 		"myJS/GhostTrack.js",
-		"myJS/Car.js"
+		"myJS/Car.js",
+		"myJS/Helico.js"
 	]);
 	// Loads modules contained in includes and starts main function
 	ModulesLoader.loadModules(start) ;
@@ -205,6 +206,7 @@ function render(arg) {
 	CameraManagement.render(arg);
 	GhostTrack.add({x: arg.NAV.x, y: arg.NAV.y, z: arg.NAV.z, theta: arg.car.rotationZ.rotation.z});
 	GhostTrack.move();
+	arg.helico.tick();
 	
 	arg.chartData.setValue(0, 1, SpeedManagement.speed());
 	arg.chart.draw(arg.chartData, arg.chartOptions);
@@ -292,13 +294,9 @@ function start() {
 			{x: CARx, y: CARy, z: CARz, theta: CARtheta},
 			{renderingEnvironment, Loader}
 	);
-	/*
-	var vehicle = createVehicle(CARx, CARy, CARz, CARtheta);
-	var carPosition = createCarPosition(renderingEnvironment, CARx, CARy, CARz);
-	var carFloorSlope = createCarFloorSlope(carPosition);
-	var carRotationZ = createCarRotationZ(carFloorSlope, CARtheta);
-	var carGeometry = createCarGeometry(Loader, carRotationZ);
-	*/
+	
+	// Helico
+	var helico = new Helico({ z: 300 }, {Loader, renderingEnvironment});
 		
 	// Google chart - Gauge - for speed reporting
 	var chartData = createChartData();
@@ -309,13 +307,13 @@ function start() {
 		currentlyPressedKeys,
 		//CARx, CARy, CARz, CARtheta,
 		renderingEnvironment, Lights, Loader, NAV,
-		car,
+		car, helico,
 		//vehicle, carPosition, carFloorSlope, carRotationZ, carGeometry,
 		chartData, chartOptions, chart
 	};
 	
 	// ghosts
-	GhostTrack.loadGhosts();
+	GhostTrack.loadGhosts(arg);
 	
 	
 	// Debug	

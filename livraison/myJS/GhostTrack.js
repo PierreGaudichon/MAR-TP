@@ -36,12 +36,12 @@ GhostTrack.move = function() {
 }
 
 
-GhostTrack.loadGhosts = function() {
+GhostTrack.loadGhosts = function(arg) {
 	DebugManagement.set({"ghosts.number": localStorage.length});
 	for(var i = 0; i < localStorage.length; i++) {
 		GhostTrack.register(
 				JSON.parse(localStorage.getItem(localStorage.key(i))),
-				{ renderingEnvironment, Loader }
+				arg
 		);
 	}
 }
