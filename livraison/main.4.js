@@ -12,6 +12,7 @@ requirejs(['ModulesLoaderV2.js'], function()
 			                              "theirJS/ThreeLoadingEnv.js", 
 			                              "theirJS/navZ.js",
 			                              "FlyingVehicle.js"]) ;
+			ModulesLoader.requireModules(["myJS/Helico.js"]);
 			// Loads modules contained in includes and starts main function
 			ModulesLoader.loadModules(start) ;
 		}
@@ -41,6 +42,9 @@ function start()
 	renderingEnvironment.camera.position.x = 0 ;
 	renderingEnvironment.camera.position.y = 0 ;
 	renderingEnvironment.camera.position.z = 40 ;
+	
+	// load helico
+	var helico = new Helico({}, {Loader, renderingEnvironment});
 	
 	//	event listener
 	//	---------------------------------------------------------------------------
@@ -91,6 +95,7 @@ function start()
 	function render() { 
 		requestAnimationFrame( render );
 		handleKeys();
+		helico.tick();
 		// Rendering
 		renderingEnvironment.renderer.render(renderingEnvironment.scene, renderingEnvironment.camera); 
 	};

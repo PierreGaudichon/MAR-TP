@@ -10,8 +10,7 @@ var maxId = 0;
 Car = class car {
 	
 	constructor({ x, y, z, theta }, { renderingEnvironment, Loader} ) {
-	
-		
+			
 		// id
 		this.id = maxId++;
 		// position
@@ -52,7 +51,7 @@ Car = class car {
 			filename: 'assets/car_Zup_01.obj',
 			node: this.rotationZ,
 			name: `car-${this.id}:geometry` // car3
-		}) ;
+		});
 		this.geometry.position.z= +0.25;
 		
 	}
