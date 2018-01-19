@@ -64,7 +64,7 @@ class Propeller {
 	tick() {
 		this.blades.forEach(function(blade) { blade.tick(); });
 		
-		if(this.rotating) {
+		/*if(this.rotating) {
 			var speed = 0.02;
 			if(this.dir) { this.position.rotation.z += speed; }
 			else { this.position.rotation.z += -speed; }
@@ -72,7 +72,7 @@ class Propeller {
 			if(-Math.PI/4 > r || r > Math.PI/4) {
 				this.dir = !this.dir;
 			}
-		}
+		}*/
 	}
 }
 
@@ -96,15 +96,18 @@ class Blade {
 		
 		this.blade.position.y = 2.9;
 		this.blade.rotation.y = theta;
+		this.speed = 0;
 	}
 	
 	tick() {
-		this.blade.rotation.y = this.blade.rotation.y + 2*Math.PI/60*Blade.ANGULAR_SPEED;
+		var coef = (this.speed/10+Blade.BASE_ANGULAR_SPEED) * Blade.ANGULAR_SPEED_COEF;
+		this.blade.rotation.y += 2*Math.PI * coef;
 	}
 	
 }
 
-Blade.ANGULAR_SPEED = 1; // rotation per second
+Blade.ANGULAR_SPEED_COEF = 1/60; // rotation per frame
+Blade.BASE_ANGULAR_SPEED = 2;
 	
 	
 Helico = class Helico {
@@ -118,10 +121,10 @@ Helico = class Helico {
 		this.position = new THREE.Object3D(); 
 		this.position.name = `helico-${this.id}:position`;
 		renderingEnvironment.addToScene(this.position);
-		
+		DebugManagement.set({"helico.x": 0});
+		DebugManagement.set({"helico.y": 0});
+		DebugManagement.set({"helico.z": 0});
 		this.setPosition({x, y, z});
-		//this.position.rotation.x = -Math.PI/2;
-		//this.position.rotation.z = Math.PI;
 		
 		// corp
 		this.corp = Loader.load({
@@ -147,15 +150,102 @@ Helico = class Helico {
 			{ rotating: false }
 		);
 		
+		// rotation
+		this.propellerRotationSpeed = 2*Math.PI/60;
+		this.corpRotationSpeed = 2*Math.PI/120;
+		this.corpRotation = 0;
+		this.propellersRotation = 0;
+		
+		// speed
+		this.speed = 0; // px/frame
+		this.MAX_SPEED = 10; // px/frame
+		this.acceleration = 0.5; // px.frame^-2
+		this.frictionDeceleration = 0.1;
+		DebugManagement.set({"helico.speed": this.speed});
+		
 	}
 	
 	setPosition({x, y, z}) {
-		if(x != undefined) { this.position.position.x = x; }
-		if(y != undefined) { this.position.position.y = y; }
-		if(z != undefined) { this.position.position.z = z; }
+		if(x != undefined) {
+			DebugManagement.set({"helico.x": x});
+			this.position.position.x = x;
+		}
+		if(y != undefined) {
+			DebugManagement.set({"helico.y": y});
+			this.position.position.y = y;
+		}
+		if(z != undefined) {
+			DebugManagement.set({"helico.z": z});
+			this.position.position.z = z;
+		}
+	}
+	
+	turnLeft() {
+		var newRotation = this.rightPropeller.position.rotation.z + this.propellerRotationSpeed;
+		this.rightPropeller.position.rotation.z = newRotation;
+		this.leftPropeller.position.rotation.z = newRotation;
+	}
+	
+	turnRight() {
+		var newRotation = this.rightPropeller.position.rotation.z - this.propellerRotationSpeed;
+		this.rightPropeller.position.rotation.z = newRotation;
+		this.leftPropeller.position.rotation.z = newRotation;
+	}
+	
+	setSpeed(s) {
+		this.speed = s;
+		if(this.speed > this.MAX_SPEED) { this.speed = this.MAX_SPEED; }
+		if(this.speed < 0) { this.speed = 0; }
+		Array.prototype
+			.concat(this.rightPropeller.blades)
+			.concat(this.leftPropeller.blades)
+			.forEach(function(blade){ blade.speed = s; });
+		DebugManagement.set({"helico.speed": this.speed});
+	}
+	
+	speedup() {
+		this.setSpeed(this.speed + this.acceleration);
+	}
+	
+	brake() {
+		this.setSpeed(this.speed - this.acceleration);
 	}
 	
 	tick() {
+		// handle helico rotation
+		// shortcuts
+		var propellerRotation = this.rightPropeller.position.rotation.z;
+		var corpRotation = (this.position.rotation.z + 2*Math.PI) % (2*Math.PI);
+		// right key is being pressed
+		if(propellerRotation > this.corpRotationSpeed) {
+			corpRotation += this.corpRotationSpeed;
+			propellerRotation -= this.corpRotationSpeed;
+		// left key is being pressed
+		} else if(propellerRotation < -this.corpRotationSpeed) {
+			corpRotation -= this.corpRotationSpeed;
+			propellerRotation += this.corpRotationSpeed;
+		// the helico is behind (going right)
+		} else if(propellerRotation > 0) {
+			corpRotation = corpRotation - propellerRotation;
+			propellerRotation = 0;
+		// the helico is behind (going left)
+		} else if(propellerRotation < 0) {
+			corpRotation = corpRotation + propellerRotation;
+			propellerRotation = 0;
+		}
+		// set everithing
+		this.rightPropeller.position.rotation.z = propellerRotation;
+		this.leftPropeller.position.rotation.z = propellerRotation;
+		this.position.rotation.z = corpRotation;
+		
+		// handle speed
+		this.setSpeed(this.speed - this.frictionDeceleration);
+		this.position.position.y += this.speed * Math.cos(this.position.rotation.z);
+		this.position.position.x -= this.speed * Math.sin(this.position.rotation.z);
+		DebugManagement.set({"helico.x": this.x});
+		DebugManagement.set({"helico.y": this.y});
+		
+		// dispatch ticks
 		this.rightPropeller.tick();
 		this.leftPropeller.tick();
 		this.centralPropeller.tick();

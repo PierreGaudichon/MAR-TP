@@ -33,7 +33,8 @@ requirejs(['ModulesLoaderV2.js'], function() {
 		"myJS/LapManagement.js",
 		"myJS/GhostTrack.js",
 		"myJS/Car.js",
-		"myJS/Helico.js"
+		"myJS/Helico.js",
+		"myJS/MovementManagement.js"
 	]);
 	// Loads modules contained in includes and starts main function
 	ModulesLoader.loadModules(start) ;
@@ -171,36 +172,19 @@ function createChart() {
 	   
 --------------------------------------------------------------------------- */
 
-function handleKeys(arg) {
-	if (arg.currentlyPressedKeys[67]) { // (C) debug
-		// debug scene
-		arg.renderingEnvironment.scene.traverse(function(o){
-			console.log('object:'+o.name+'>'+o.id+'::'+o.type);
-		});
-	}				
-	if (arg.currentlyPressedKeys[68]) { // (D) Right
-		arg.car.vehicle.turnRight(2000);
-	}
-	if (arg.currentlyPressedKeys[81]) { // (Q) Left 
-		arg.car.vehicle.turnLeft(2000);
-	}
-	if (arg.currentlyPressedKeys[90]) { // (Z) Up
-		arg.car.vehicle.goFront(1200, 1200);
-	}
-	if (arg.currentlyPressedKeys[83]) { // (S) Down 
-		arg.car.vehicle.brake(100);
-	}
-}
-
-
+var lastLoopTime = (new Date()).getTime();
 
 function render(arg) { 
 	// make animation
 	requestAnimationFrame(function() { render(arg); });
+	// fps count
+	var newTime = (new Date()).getTime();
+	DebugManagement.set({"fps": newTime - lastLoopTime});
+	lastLoopTime = newTime;
 	// given
-	handleKeys(arg);
 	arg.car.move(arg.NAV);
 	// custom
+	MovementManagement.handleKeys(arg);
 	CheckPointManagement.tick(arg.NAV);
 	SpeedManagement.addPosition({x: arg.NAV.x, y: arg.NAV.y});
 	CameraManagement.render(arg);

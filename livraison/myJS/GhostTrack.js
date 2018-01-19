@@ -19,12 +19,12 @@ var ghosts = [];
 
 GhostTrack.add = function(pos) {
 	positions.push(pos);
-	localStorage.setItem(startTime, JSON.stringify(positions));
+	//localStorage.setItem(startTime, JSON.stringify(positions));
 };
 
 GhostTrack.register = function(item, env) {
 	if(item.length > 0) {
-		ghosts.push(new GhostCar(item, env));
+		//ghosts.push(new GhostCar(item, env));
 	}
 }
 
