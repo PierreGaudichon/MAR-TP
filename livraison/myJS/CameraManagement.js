@@ -16,7 +16,7 @@ var cameras = {
 
 	embedded: {
 		load: function(arg) {
-			arg.carGeometry.add(arg.renderingEnvironment.camera);
+			arg.car.geometry.add(arg.renderingEnvironment.camera);
 			arg.renderingEnvironment.camera.position.x = 0;
 			arg.renderingEnvironment.camera.position.z = 10;
 			arg.renderingEnvironment.camera.position.y = -25;
@@ -25,7 +25,7 @@ var cameras = {
 			arg.renderingEnvironment.camera.rotation.z = 0;
 		},
 		unload: function(arg) {
-			arg.carGeometry.remove(arg.renderingEnvironment.camera);
+			arg.car.geometry.remove(arg.renderingEnvironment.camera);
 		}
 	},
 	
@@ -37,8 +37,8 @@ var cameras = {
 		render: function(arg) {
 			arg.renderingEnvironment.camera.position.x = arg.NAV.x;
 			arg.renderingEnvironment.camera.position.y = arg.NAV.y;
-			arg.renderingEnvironment.camera.position.z = arg.NAV.z + 50 + arg.vehicle.speed.length()*2;
-			arg.renderingEnvironment.camera.rotation.z = arg.vehicle.angles.z - Math.PI/2;
+			arg.renderingEnvironment.camera.position.z = arg.NAV.z + 50 + arg.car.vehicle.speed.length()*2;
+			arg.renderingEnvironment.camera.rotation.z = arg.car.vehicle.angles.z - Math.PI/2;
 		}
 	},
 	

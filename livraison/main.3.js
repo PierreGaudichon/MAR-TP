@@ -31,7 +31,8 @@ requirejs(['ModulesLoaderV2.js'], function() {
 		"myJS/DebugManagement.js",
 		"myJS/CheckPointManagement.js",
 		"myJS/LapManagement.js",
-		"myJS/GhostTrack.js"
+		"myJS/GhostTrack.js",
+		"myJS/Car.js"
 	]);
 	// Loads modules contained in includes and starts main function
 	ModulesLoader.loadModules(start) ;
@@ -133,56 +134,6 @@ function createNAV(CARx, CARy, CARz) {
 
 /* ---------------------------------------------------------------------------
 
-	   CREATE CAR
-	   
---------------------------------------------------------------------------- */
-
-function createVehicle(CARx, CARy, CARz, CARtheta) {
-	return new FlyingVehicle({
-		position: new THREE.Vector3(CARx, CARy, CARz),
-		zAngle : CARtheta + Math.PI/2,
-	});
-}
-
-function createCarPosition(renderingEnvironment, CARx, CARy, CARz) {
-	// car Translation
-	var carPosition = new THREE.Object3D(); 
-	carPosition.name = 'car0'; 
-	renderingEnvironment.addToScene(carPosition); 
-	// initial POS
-	carPosition.position.x = CARx;
-	carPosition.position.y = CARy;
-	carPosition.position.z = CARz;
-	return carPosition;
-}
-
-function createCarFloorSlope(carPosition) {
-	var carFloorSlope = new THREE.Object3D(); 
-	carFloorSlope.name = 'car1';
-	carPosition.add(carFloorSlope);
-	return carFloorSlope;
-}
-
-function createCarRotationZ(carFloorSlope, CARtheta) {
-	var carRotationZ = new THREE.Object3D(); 
-	carRotationZ.name = 'car2';
-	carFloorSlope.add(carRotationZ);
-	carRotationZ.rotation.z = CARtheta;
-	return carRotationZ;
-}
-
-function createCarGeometry(Loader, carRotationZ) {
-	var carGeometry = Loader.load({filename: 'assets/car_Zup_01.obj', node: carRotationZ, name: 'car3'}) ;
-	carGeometry.position.z= +0.25;
-	return carGeometry;
-}
-
-
-
-
-
-/* ---------------------------------------------------------------------------
-
 	   CREATE CHART
 	   
 --------------------------------------------------------------------------- */
@@ -227,58 +178,33 @@ function handleKeys(arg) {
 		});
 	}				
 	if (arg.currentlyPressedKeys[68]) { // (D) Right
-		arg.vehicle.turnRight(2000);
+		arg.car.vehicle.turnRight(2000);
 	}
 	if (arg.currentlyPressedKeys[81]) { // (Q) Left 
-		arg.vehicle.turnLeft(2000);
+		arg.car.vehicle.turnLeft(2000);
 	}
 	if (arg.currentlyPressedKeys[90]) { // (Z) Up
-		arg.vehicle.goFront(1200, 1200);
+		arg.car.vehicle.goFront(1200, 1200);
 	}
 	if (arg.currentlyPressedKeys[83]) { // (S) Down 
-		arg.vehicle.brake(100);
+		arg.car.vehicle.brake(100);
 	}
 }
 
-function moveCar(arg) {
-	// Vehicle stabilization 
-	arg.vehicle.goUp(
-			arg.vehicle.weight()/4.0, 
-			arg.vehicle.weight()/4.0,
-			arg.vehicle.weight()/4.0,
-			arg.vehicle.weight()/4.0);
-	arg.vehicle.stopAngularSpeedsXY() ;
-	arg.vehicle.stabilizeSkid(50) ; 
-	arg.vehicle.stabilizeTurn(1000) ;
-	var oldPosition = arg.vehicle.position.clone() ;
-	arg.vehicle.update(1.0/60) ;
-	var newPosition = arg.vehicle.position.clone() ;
-	newPosition.sub(oldPosition) ;
-	// NAV
-	arg.NAV.move(newPosition.x, newPosition.y, 150,10) ;
-	// carPosition
-	arg.carPosition.position.set(arg.NAV.x, arg.NAV.y, arg.NAV.z) ;
-	// Updates the vehicle
-	arg.vehicle.position.x = arg.NAV.x ;
-	arg.vehicle.position.y = arg.NAV.Y ;
-	// Updates carFloorSlope
-	arg.carFloorSlope.matrixAutoUpdate = false;		
-	arg.carFloorSlope.matrix.copy(arg.NAV.localMatrix(arg.CARx,arg.CARy));
-	// Updates carRotationZ
-	arg.carRotationZ.rotation.z = arg.vehicle.angles.z-Math.PI/2.0 ;
-}
+
 
 function render(arg) { 
 	// make animation
 	requestAnimationFrame(function() { render(arg); });
 	// given
 	handleKeys(arg);
-	moveCar(arg);
+	arg.car.move(arg.NAV);
 	// custom
 	CheckPointManagement.tick(arg.NAV);
 	SpeedManagement.addPosition({x: arg.NAV.x, y: arg.NAV.y});
 	CameraManagement.render(arg);
-	GhostTrack.add({x: arg.NAV.x, y: arg.NAV.y});
+	GhostTrack.add({x: arg.NAV.x, y: arg.NAV.y, z: arg.NAV.z, theta: arg.car.rotationZ.rotation.z});
+	GhostTrack.move();
 	
 	arg.chartData.setValue(0, 1, SpeedManagement.speed());
 	arg.chart.draw(arg.chartData, arg.chartOptions);
@@ -314,7 +240,7 @@ function setListeners(arg) {
 		arg.currentlyPressedKeys[event.keyCode] = false;
 	}	
 	function onKeyPress(e) {
-		if(e.key == "p") { // (P)
+		if(e.key == "p") {
 			CameraManagement.switch(arg);
 		} else if(e.key == "c") {
 			DebugManagement.toggle();
@@ -362,16 +288,18 @@ function start() {
 	var NAV = createNAV(CARx, CARy, CARz);
 	
 	// Car
-	/*var car = new Car(
-			{CARx, CARy, CARz, CARtheta},
+	var car = new Car(
+			{x: CARx, y: CARy, z: CARz, theta: CARtheta},
 			{renderingEnvironment, Loader}
-	);*/
+	);
+	/*
 	var vehicle = createVehicle(CARx, CARy, CARz, CARtheta);
 	var carPosition = createCarPosition(renderingEnvironment, CARx, CARy, CARz);
 	var carFloorSlope = createCarFloorSlope(carPosition);
 	var carRotationZ = createCarRotationZ(carFloorSlope, CARtheta);
 	var carGeometry = createCarGeometry(Loader, carRotationZ);
-			
+	*/
+		
 	// Google chart - Gauge - for speed reporting
 	var chartData = createChartData();
 	var chartOptions = createChartOptions();
@@ -379,11 +307,21 @@ function start() {
 	
 	var arg = {
 		currentlyPressedKeys,
-		CARx, CARy, CARz, CARtheta,
+		//CARx, CARy, CARz, CARtheta,
 		renderingEnvironment, Lights, Loader, NAV,
-		vehicle, carPosition, carFloorSlope, carRotationZ, carGeometry,
+		car,
+		//vehicle, carPosition, carFloorSlope, carRotationZ, carGeometry,
 		chartData, chartOptions, chart
 	};
+	
+	// ghosts
+	DebugManagement.set({"ghosts.number": localStorage.length});
+	for(var i = 0; i < localStorage.length; i++) {
+		GhostTrack.register(
+				JSON.parse(localStorage.getItem(localStorage.key(i))),
+				{ renderingEnvironment, Loader }
+		);
+	}
 	
 	// Debug	
 	//NAV.debug();
@@ -394,7 +332,7 @@ function start() {
 	setListeners(arg);	
 	
 	LapManagement.onLapFinished(function(n) {
-		$lapsCounter.text(n + " / " + MAX_LAPS);
+		$lapsCounter.text(n + " / " + CheckPointManagement.MAX_LAPS);
 	});
 	
 	LapManagement.onFinished(function(n) {
