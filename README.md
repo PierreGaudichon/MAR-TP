@@ -6,3 +6,29 @@ plan du pdf :
 	- haut : y, bas : -y
 
 
+
+TODO : 
+	- ghosts
+	  + several cars
+	  + z axis
+	  + other cars slope
+	- helicopter
+	  + camera
+	  + particles
+	- network races
+	  + connection
+	  + socket io
+
+DONE :
+	- refactor
+	- cameras
+		+ embedded
+		+ tv
+		+ hovering
+		+ master
+	- debug
+	- laps
+	  + checkpoints
+	  + win
+	  + wrong direction
+	
