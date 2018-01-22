@@ -172,18 +172,22 @@ function createChart() {
 	   
 --------------------------------------------------------------------------- */
 
+// fps count
 var lastLoopTime = (new Date()).getTime();
+function calculateDt(arg) {
+	var newTime = (new Date()).getTime();
+	arg.dt = newTime - lastLoopTime;
+	DebugManagement.set({"fps": arg.dt});
+	lastLoopTime = newTime;	
+}
 
 function render(arg) { 
 	// make animation
 	requestAnimationFrame(function() { render(arg); });
-	// fps count
-	var newTime = (new Date()).getTime();
-	DebugManagement.set({"fps": newTime - lastLoopTime});
-	lastLoopTime = newTime;
 	// given
 	arg.car.move(arg.NAV);
 	// custom
+	calculateDt(arg);
 	MovementManagement.handleKeys(arg);
 	CheckPointManagement.tick(arg.NAV);
 	SpeedManagement.addPosition({x: arg.NAV.x, y: arg.NAV.y});
