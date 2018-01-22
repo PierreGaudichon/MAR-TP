@@ -9,7 +9,11 @@ plan du pdf :
 
 (+ DONE, - TODO)
 
-TODO : 
+FEATURES : 
+	- particles
+	  - understanding system
+	  - parametrizing it in the void
+	  - integration to helico
 	- ghosts
 	  + registering ghost
 	  + several cars
@@ -21,6 +25,7 @@ TODO :
 	  + rotating turbines (turnig amortisation)
 	  + moving it (wasd keys, acceleration, friction)
 	  + propellers speed
+	  - bezier curve
 	- network races
 	  - connection
 	  - socket io
@@ -29,13 +34,12 @@ TODO :
 	  + win
 	  + wrong direction
 	  - count time
-	
-DONE :
 	+ refactor
 	+ cameras
 		+ embedded
 		+ tv
 		+ hovering
 		+ master
+		+ switch
 	+ debug
 	
