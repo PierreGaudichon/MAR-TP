@@ -7,28 +7,35 @@ plan du pdf :
 
 
 
+(+ DONE, - TODO)
+
 TODO : 
 	- ghosts
+	  + registering ghost
 	  + several cars
-	  + z axis
-	  + other cars slope
+	  - z axis
+	  - other cars slope
 	- helicopter
 	  + camera
-	  + particles
+	  - particles
+	  + rotating turbines (turnig amortisation)
+	  + moving it (wasd keys, acceleration, friction)
+	  + propellers speed
 	- network races
-	  + connection
-	  + socket io
-
-DONE :
-	- refactor
-	- cameras
-		+ embedded
-		+ tv
-		+ hovering
-		+ master
-	- debug
+	  - connection
+	  - socket io
 	- laps
 	  + checkpoints
 	  + win
 	  + wrong direction
+	  - count time
+	
+DONE :
+	+ refactor
+	+ cameras
+		+ embedded
+		+ tv
+		+ hovering
+		+ master
+	+ debug
 	
