@@ -12,7 +12,12 @@ requirejs(['ModulesLoaderV2.js'], function()
 			                              "theirJS/ThreeLoadingEnv.js", 
 			                              "theirJS/navZ.js",
 			                              "FlyingVehicle.js"]) ;
-			ModulesLoader.requireModules(["myJS/Helico.js"]);
+			// ModulesLoader.requireModules(["myJS/Helico.js"]);
+			ModulesLoader.requireModules([
+				"ParticleSystem.js",
+				"Interpolators.js",
+				"MathExt.js"
+			]);
 			// Loads modules contained in includes and starts main function
 			ModulesLoader.loadModules(start) ;
 		}
@@ -44,7 +49,53 @@ function start()
 	renderingEnvironment.camera.position.z = 40 ;
 	
 	// load helico
-	var helico = new Helico({}, {Loader, renderingEnvironment});
+	// var helico = new Helico({}, {Loader, renderingEnvironment});
+	
+	// Particles
+	// Q.1
+	var particles = new ParticleSystem.Engine_Class({
+		particlesCount: 10000,
+		textureFile: "assets/particles/particle.png",
+		blendingMode: THREE.AdditiveBlending
+	});
+	//renderingEnvironment.addToScene(particles.particleSystem);
+	// Q.2
+	particles.addEmitter(new ParticleSystem.ConeEmitter_Class({
+		cone: {
+			center: new THREE.Vector3(0, 0, 0),
+			height: new THREE.Vector3(0, 0, 10),
+			radius: 0.5,
+			flow: 1000,
+		},
+		particle: {
+			speed: new MathExt.Interval_Class(5, 10),
+			mass: new MathExt.Interval_Class(0.1, 0.3),
+			size: new MathExt.Interval_Class(0.1, 1),
+			lifeTime: new MathExt.Interval_Class(1, 7)
+		}
+	}));
+	// Q.4
+	particles.addModifier(new ParticleSystem.ForceModifier_Weight_Class());
+	// Q.3
+	particles.addModifier(new ParticleSystem.LifeTimeModifier_Class());
+	particles.addModifier(new ParticleSystem.PositionModifier_EulerItegration_Class());
+	// Q.5
+	var linearInterpolator = new Interpolators.Linear_Class(1, 0);
+	particles.addModifier(new ParticleSystem.OpacityModifier_TimeToDeath_Class(linearInterpolator));
+	// Q.6 (blue instead of red)
+	var white = { r: 1, g: 1, b: 1 };
+	var lightGrey = { r: 0.9, g: 0.9, b: 0.8 };
+	var blue = { r: 0, g: 0, b: 1 };
+	var red = { r: 0.7, g: 0, b: 0 }
+	particles.addModifier(new ParticleSystem.ColorModifier_TimeToDeath_Class(red, lightGrey));
+	// Q.7
+	var rotating = new THREE.Object3D();
+	rotating.add(particles.particleSystem);
+	renderingEnvironment.addToScene(rotating);
+	// tourne sur axe z : ok
+	// tourne sur axe x ou y : pas ok, la gravité tourne avec l'axe et pas tjr vers le bas.
+	// Q.8
+	
 	
 	//	event listener
 	//	---------------------------------------------------------------------------
@@ -95,7 +146,10 @@ function start()
 	function render() { 
 		requestAnimationFrame( render );
 		handleKeys();
-		helico.tick();
+		// helico.tick();
+		particles.animate(0.01);
+		rotating.rotation.x += 1/60;
+		
 		// Rendering
 		renderingEnvironment.renderer.render(renderingEnvironment.scene, renderingEnvironment.camera); 
 	};
