@@ -5,7 +5,13 @@ if(typeof(ModulesLoader)=="undefined")
 }
 
 // Loads dependencies and initializes this module
-ModulesLoader.requireModules(['lib/three.min.js', 'Physics.js', 'ThreeRenderer.js', 'MathExt.js', 'DebugHelper.js']) ;
+ModulesLoader.requireModules([
+	"threejs/three.min.js",
+	"Physics.js",
+	// "ThreeRenderer.js",
+	"MathExt.js",
+	"DebugHelper.js"
+]) ;
 
 var ParticleSystem = {} ;
 
@@ -104,7 +110,7 @@ ParticleSystem.PhysicsParticle_Class = function(position, speed, mass, size, lif
 // Emitters description //
 /////////////////////////
 
-/** A class emitting particles in a cone. The configuration provided
+/** A class emitting particles in a fcone. The configuration provided
  *  to the constructor must have the following structure:
 {
 	// Description of the emitter shape
