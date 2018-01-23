@@ -13,6 +13,7 @@ requirejs(['ModulesLoaderV2.js'], function()
 			                              "theirJS/navZ.js",
 			                              "FlyingVehicle.js"]) ;
 			// ModulesLoader.requireModules(["myJS/Helico.js"]);
+			ModulesLoader.requireModules(["myJS/AbsoluteConeEmitter.js"]);
 			ModulesLoader.requireModules([
 				"ParticleSystem.js",
 				"Interpolators.js",
@@ -58,14 +59,21 @@ function start()
 		textureFile: "assets/particles/particle.png",
 		blendingMode: THREE.AdditiveBlending
 	});
+	// Q.7
+	var rotating = new THREE.Object3D();
+	renderingEnvironment.addToScene(rotating);
+	renderingEnvironment.addToScene(particles.particleSystem);
+	// tourne sur axe z : ok
+	// tourne sur axe x ou y : pas ok, la gravité tourne avec l'axe et pas tjr vers le bas.
 	//renderingEnvironment.addToScene(particles.particleSystem);
 	// Q.2
-	particles.addEmitter(new ParticleSystem.ConeEmitter_Class({
+	particles.addEmitter(new AbsoluteConeEmitter({ // Q.8
 		cone: {
 			center: new THREE.Vector3(0, 0, 0),
+			following: rotating,
 			height: new THREE.Vector3(0, 0, 10),
 			radius: 0.5,
-			flow: 1000,
+			flow: 1000
 		},
 		particle: {
 			speed: new MathExt.Interval_Class(5, 10),
@@ -88,13 +96,8 @@ function start()
 	var blue = { r: 0, g: 0, b: 1 };
 	var red = { r: 0.7, g: 0, b: 0 }
 	particles.addModifier(new ParticleSystem.ColorModifier_TimeToDeath_Class(red, lightGrey));
-	// Q.7
-	var rotating = new THREE.Object3D();
-	rotating.add(particles.particleSystem);
-	renderingEnvironment.addToScene(rotating);
-	// tourne sur axe z : ok
-	// tourne sur axe x ou y : pas ok, la gravité tourne avec l'axe et pas tjr vers le bas.
-	// Q.8
+	
+	
 	
 	
 	//	event listener
@@ -143,12 +146,14 @@ function start()
 		renderingEnvironment.onWindowResize(window.innerWidth,window.innerHeight);
 	}
 
+	rotating.rotation.x = Math.PI/4;
+	
 	function render() { 
 		requestAnimationFrame( render );
 		handleKeys();
 		// helico.tick();
-		particles.animate(0.01);
-		rotating.rotation.x += 1/60;
+		particles.animate(0.016);
+		rotating.rotation.y += 1/60;
 		
 		// Rendering
 		renderingEnvironment.renderer.render(renderingEnvironment.scene, renderingEnvironment.camera); 

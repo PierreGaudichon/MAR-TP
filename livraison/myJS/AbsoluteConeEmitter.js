@@ -33,6 +33,7 @@ function AbsoluteConeEmitter(configuration) {
 	 *  Emission center
 	 */
 	this.center = configuration.cone.center ;
+	this.following = configuration.cone.following;
 
 	/**
 	 *  Particles life time interval
@@ -94,8 +95,7 @@ function AbsoluteConeEmitter(configuration) {
 	/**
 	 * @return {position, speed} in which position and speed are instances of THREE.Vector3
 	 */
-	this.createParticle = function()
-	{
+	this.createParticle = function() {
 		var mass = 0.1 ;
 		var initialPosition = this.center.clone() ;
 		var initialSpeed = this.direction.clone() ;
@@ -104,10 +104,16 @@ function AbsoluteConeEmitter(configuration) {
 		modifier.multiplyScalar(this.spread*Math.sqrt(Math.random())) ;
 		initialSpeed.add(modifier) ;
 		initialSpeed.normalize() ;
-		//initialSpeed.multiplyScalar(Math.random()*(this.speedInterval.max-this.speedInterval.min)+this.speedInterval.min) ;
 		initialSpeed.multiplyScalar(this.speedInterval.random()) ;
-		return this.instantiateParticle(initialPosition, initialSpeed, mass, this.sizeInterval.random(), this.lifeTimeInterval.random()) ;
-	} ;
+		initialSpeed.applyEuler(this.following.rotation.clone());
+		return this.instantiateParticle(
+			initialPosition,
+			initialSpeed,
+			mass,
+			this.sizeInterval.random(),
+			this.lifeTimeInterval.random()
+		);
+	}
 
 	/** Given the particle flow, creates necessary particles.
 	 * 

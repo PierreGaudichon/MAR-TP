@@ -327,7 +327,6 @@ ParticleSystem.PositionModifier_PlaneBounce_Class = function(point, normal, atte
 			{
 				var normalClone = this.normal.clone() ;
 				normalClone.multiplyScalar(-2.0*this.normal.dot(particle.speed)) ;
-				//console.log(this.normal.dot(particle.speed)) ;
 				normalClone.add(particle.speed);
 				normalClone.multiplyScalar(this.attenuation) ;
 				particle.speed = normalClone ;
