@@ -313,7 +313,7 @@ function start() {
 	setListeners(arg);	
 	
 	LapManagement.onLapFinished(function(n) {
-		$lapsCounter.text(n + " / " + CheckPointManagement.MAX_LAPS);
+		$lapsCounter.text(n + " / " + LapManagement.MAX_LAPS);
 	});
 	
 	LapManagement.onFinished(function(n) {
