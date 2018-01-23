@@ -1,4 +1,11 @@
 
+if(typeof(ModulesLoader)=="undefined") {
+	throw "ModulesLoaderV2.js is required."; 
+}
+ModulesLoader.requireModules([
+	"myJS/ParticleSystemInitializer.js"
+]);
+
 
 (function() {
 	
@@ -7,7 +14,11 @@ var maxId = 0;
 
 class Propeller {
 	
-	constructor({ x, y, z, rx, ry, rz }, { Loader, helico }, { rotating }) {
+	constructor(
+			{ x, y, z, rx, ry, rz },
+			{ Loader, helico },
+			{ rotating }
+	) {
 		// id 
 		this.id = maxId++;
 		
@@ -43,7 +54,15 @@ class Propeller {
 			new Blade({ theta: 4*Math.PI/3 }, { propeller: this, Loader })
 		];
 		
+		// smoke
+		this.particles = ParticleSystemInitializer.createSystem(
+			this.position,
+			{ },
+			{ rotating: this.position }
+		);
 		
+		
+		// depreciated ?
 		this.dir = true;
 	}
 	
@@ -63,7 +82,7 @@ class Propeller {
 	
 	tick() {
 		this.blades.forEach(function(blade) { blade.tick(); });
-		
+		this.particles.animate(0.016);
 		/*if(this.rotating) {
 			var speed = 0.02;
 			if(this.dir) { this.position.rotation.z += speed; }
