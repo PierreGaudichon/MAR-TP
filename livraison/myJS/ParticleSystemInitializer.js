@@ -20,12 +20,12 @@ function createEngine({ }) {
 }
 
 
-function createEmitter({ rotating }) {
+function createEmitter({ center, height }) {
+	if(!height) { height = new THREE.Vector3(0, 0, 10); }
 	return new AbsoluteConeEmitter({
 		cone: {
-			center: new THREE.Vector3(0, 0, 0),
-			following: rotating,
-			height: new THREE.Vector3(0, 0, 10),
+			center,
+			height,
 			radius: 0.5,
 			flow: 100
 		},
@@ -53,32 +53,34 @@ var createModifier = {
 		var linearInterpolator = new Interpolators.Linear_Class(1, 0);
 		return new ParticleSystem.OpacityModifier_TimeToDeath_Class(linearInterpolator);
 	},
-	color: function() {
-		var white = { r: 1, g: 1, b: 1 };
-		var lightGrey = { r: 0.9, g: 0.9, b: 0.8 };
-		var blue = { r: 0, g: 0, b: 1 };
-		var red = { r: 0.7, g: 0, b: 0 }
-		return new ParticleSystem.ColorModifier_TimeToDeath_Class(red, lightGrey);
+	color: function(config) {
+		console.log(config);
+		return new ParticleSystem.ColorModifier_TimeToDeath_Class(config.from, config.to);
 	}
 }
 
 
-function createSystem(root, engineConfig, emitterConfig) {
+function createSystem(renderingEnvironment, engineConfig, emitterConfig, modifierConfigs) {
 	var engine = createEngine(engineConfig);
 	var emitter = createEmitter(emitterConfig);
-	root.add(engine.particleSystem);
+	renderingEnvironment.addToScene(engine.particleSystem);
 	engine.addEmitter(emitter);
 	engine.addModifier(createModifier.weight());
 	engine.addModifier(createModifier.lifeTime());
 	engine.addModifier(createModifier.eulerIntegration());
 	engine.addModifier(createModifier.opacity());
-	engine.addModifier(createModifier.color());
+	engine.addModifier(createModifier.color(modifierConfigs.color));
 	return engine;
 }
 
 
 ParticleSystemInitializer = {
-	createSystem
+	createSystem,
+	WHITE: { r: 1, g: 1, b: 1 },
+	LIGHT_GREY: { r: 0.9, g: 0.9, b: 0.8 },
+	BLACK: { r: 0.1, g: 0.1, b: 0.1 },
+	BLUE: { r: 0, g: 0, b: 1 },
+	RED: { r: 0.7, g: 0, b: 0 }
 };
 
 

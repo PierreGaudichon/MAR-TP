@@ -12,7 +12,7 @@ requirejs(['ModulesLoaderV2.js'], function()
 			                              "theirJS/ThreeLoadingEnv.js", 
 			                              "theirJS/navZ.js",
 			                              "FlyingVehicle.js"]) ;
-			// ModulesLoader.requireModules(["myJS/Helico.js"]);
+			ModulesLoader.requireModules(["myJS/Helico.js"]);
 			ModulesLoader.requireModules(["myJS/AbsoluteConeEmitter.js"]);
 			ModulesLoader.requireModules([
 				"ParticleSystem.js",
@@ -50,8 +50,9 @@ function start()
 	renderingEnvironment.camera.position.z = 40 ;
 	
 	// load helico
-	// var helico = new Helico({}, {Loader, renderingEnvironment});
+	var helico = new Helico({}, {Loader, renderingEnvironment});
 	
+	/*
 	// Particles
 	// Q.1
 	var particles = new ParticleSystem.Engine_Class({
@@ -96,7 +97,7 @@ function start()
 	var blue = { r: 0, g: 0, b: 1 };
 	var red = { r: 0.7, g: 0, b: 0 }
 	particles.addModifier(new ParticleSystem.ColorModifier_TimeToDeath_Class(red, lightGrey));
-	
+	*/
 	
 	
 	
@@ -146,14 +147,14 @@ function start()
 		renderingEnvironment.onWindowResize(window.innerWidth,window.innerHeight);
 	}
 
-	rotating.rotation.x = Math.PI/4;
+	// rotating.rotation.x = Math.PI/4;
 	
 	function render() { 
 		requestAnimationFrame( render );
 		handleKeys();
-		// helico.tick();
-		particles.animate(0.016);
-		rotating.rotation.y += 1/60;
+		helico.tick();
+		// particles.animate(0.016);
+		// rotating.rotation.y += 1/60;
 		
 		// Rendering
 		renderingEnvironment.renderer.render(renderingEnvironment.scene, renderingEnvironment.camera); 

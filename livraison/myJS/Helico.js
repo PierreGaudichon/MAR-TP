@@ -3,7 +3,8 @@ if(typeof(ModulesLoader)=="undefined") {
 	throw "ModulesLoaderV2.js is required."; 
 }
 ModulesLoader.requireModules([
-	"myJS/ParticleSystemInitializer.js"
+	"myJS/ParticleSystemInitializer.js",
+	"myJS/DebugManagement.js"
 ]);
 
 
@@ -16,7 +17,7 @@ class Propeller {
 	
 	constructor(
 			{ x, y, z, rx, ry, rz },
-			{ Loader, helico },
+			{ Loader, helico, renderingEnvironment },
 			{ rotating }
 	) {
 		// id 
@@ -56,9 +57,12 @@ class Propeller {
 		
 		// smoke
 		this.particles = ParticleSystemInitializer.createSystem(
-			this.position,
+			renderingEnvironment,
 			{ },
-			{ rotating: this.position }
+			{ center: this.position, height: new THREE.Vector3(0, -20, 0) },
+			// { color: { from: ParticleSystemInitializer.RED, to: ParticleSystemInitializer.LIGHT_GREY }}
+			{ color: { from: ParticleSystemInitializer.WHITE, to: ParticleSystemInitializer.WHITE }}
+			// { color: { from: ParticleSystemInitializer.BLACK, to: ParticleSystemInitializer.BLACK }}
 		);
 		
 		
@@ -131,7 +135,7 @@ Blade.BASE_ANGULAR_SPEED = 2;
 	
 Helico = class Helico {
 	
-	constructor({x, y, z}, {renderingEnvironment, Loader}) {
+	constructor({ x, y, z }, { renderingEnvironment, Loader }) {
 		
 		// id
 		this.id = maxId++;
@@ -155,17 +159,17 @@ Helico = class Helico {
 		// propellers
 		this.rightPropeller = new Propeller(
 			{ x: 8.5, y: -3.4, z: 3.8 },
-			{ helico: this, Loader },
+			{ helico: this, Loader, renderingEnvironment },
 			{ rotating: true }
 		);
 		this.leftPropeller = new Propeller(
 			{ x: -8.5, y: -3.4, z: 3.8 },
-			{ helico: this, Loader },
+			{ helico: this, Loader, renderingEnvironment },
 			{ rotating: true }
 		);
 		this.centralPropeller = new Propeller(
 			{ x: 0, y: 0, z: 4, rx: Math.PI/2 },
-			{ helico: this, Loader },
+			{ helico: this, Loader, renderingEnvironment },
 			{ rotating: false }
 		);
 		
@@ -261,8 +265,8 @@ Helico = class Helico {
 		this.setSpeed(this.speed - this.frictionDeceleration);
 		this.position.position.y += this.speed * Math.cos(this.position.rotation.z);
 		this.position.position.x -= this.speed * Math.sin(this.position.rotation.z);
-		DebugManagement.set({"helico.x": this.x});
-		DebugManagement.set({"helico.y": this.y});
+		DebugManagement.set({ "helico.x": this.position.position.x });
+		DebugManagement.set({ "helico.y": this.position.position.y });
 		
 		// dispatch ticks
 		this.rightPropeller.tick();

@@ -32,8 +32,7 @@ function AbsoluteConeEmitter(configuration) {
 	/**
 	 *  Emission center
 	 */
-	this.center = configuration.cone.center ;
-	this.following = configuration.cone.following;
+	this.center = configuration.cone.center;
 
 	/**
 	 *  Particles life time interval
@@ -97,7 +96,7 @@ function AbsoluteConeEmitter(configuration) {
 	 */
 	this.createParticle = function() {
 		var mass = 0.1 ;
-		var initialPosition = this.center.clone() ;
+		var initialPosition = this.center.getWorldPosition().clone();
 		var initialSpeed = this.direction.clone() ;
 		var modifier = this.directionNormal.clone() ;
 		modifier.applyAxisAngle(this.direction, Math.PI*2.0*Math.random()) ;
@@ -105,7 +104,7 @@ function AbsoluteConeEmitter(configuration) {
 		initialSpeed.add(modifier) ;
 		initialSpeed.normalize() ;
 		initialSpeed.multiplyScalar(this.speedInterval.random()) ;
-		initialSpeed.applyEuler(this.following.rotation.clone());
+		initialSpeed.applyEuler(this.center.getWorldRotation().clone());
 		return this.instantiateParticle(
 			initialPosition,
 			initialSpeed,

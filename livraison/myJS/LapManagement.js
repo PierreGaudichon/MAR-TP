@@ -21,6 +21,9 @@ var onFinisheds = [];
 var otherSideOk = false;
 var laps = 0;
 
+var lapsTimes = [];
+var startLapTime = (new Date()).getTime();
+
 
 DebugManagement.set({
 	"lap.nbs": laps,
