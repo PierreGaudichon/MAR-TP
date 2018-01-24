@@ -12,7 +12,7 @@ requirejs(['ModulesLoaderV2.js'], function()
 			                              "theirJS/ThreeLoadingEnv.js", 
 			                              "theirJS/navZ.js",
 			                              "FlyingVehicle.js"]) ;
-			ModulesLoader.requireModules(["myJS/Helico.js"]);
+			ModulesLoader.requireModules(["myJS/helico/Helico.js"]);
 			ModulesLoader.requireModules(["myJS/AbsoluteConeEmitter.js"]);
 			ModulesLoader.requireModules([
 				"ParticleSystem.js",
