@@ -55,14 +55,12 @@ google.charts.load('current', {'packages':['gauge']});
 
 var $chart;
 var $wrongDirection;
-var $lapsCounter;
-var $win;
 
 function initDomElements() {
 	$chart = $("#chart");
 	$wrongDirection = $("#wrong-direction");
-	$lapsCounter = $("#laps-counter");
-	$win = $("#win");
+	//$lapsCounter = $("#laps-counter");
+	//$win = $("#win");
 }
 
 
@@ -312,13 +310,13 @@ function start() {
 	// Events
 	setListeners(arg);	
 	
-	LapManagement.onLapFinished(function(n) {
+	/*LapManagement.onLapFinished(function(n) {
 		$lapsCounter.text(n + " / " + LapManagement.MAX_LAPS);
 	});
 	
 	LapManagement.onFinished(function(n) {
 		$win.css("opacity", 1);
-	})
+	})*/
 	
 	CheckPointManagement.onWrongDirection(function() {
 		$wrongDirection.css("opacity", 1);
@@ -332,7 +330,7 @@ function start() {
 	DebugManagement.toggle(true);
 	$(function() {
 		initDomElements();
-		$lapsCounter.text("0 / " + LapManagement.MAX_LAPS);
+		//$lapsCounter.text("0 / " + LapManagement.MAX_LAPS);
 		render(arg); 	
 	});
 	

@@ -39,9 +39,12 @@
 				position: absolute;
 				bottom: 20px;
 				left: 20px;
-				font-size: 30px;
 				color: white;
 				text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+			}
+			#laps-counter p {
+				margin-bottom: 0;
+				font-size: 30px;
 			}
 			#debug {
 				position: absolute;
@@ -67,8 +70,14 @@
 		
 		<div id="chart"></div>
 		<div id="wrong-direction">Wrong Direction</div>
-		<div id="win">Win !</div>
-		<div id="laps-counter"></div>
+		<div id="win" v-if="won">Win !</div>
+		<div id="laps-counter">
+			<p>{{counter}} / {{maxLaps}}</p>
+			<ul>
+				<li v-for="time in times">{{time}}</li>
+				<li>{{elapsedTime}}</li>
+			</ul>
+		</div>
 		
 		<div id="debug">
 			<ul v-if="enabled">

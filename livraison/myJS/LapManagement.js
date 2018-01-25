@@ -14,45 +14,42 @@ LapManagement = {};
 (function() {
 
 
-LapManagement.MAX_LAPS = 2;
-
-var onLapFinisheds = [];
-var onFinisheds = [];
+var MAX_LAPS = 2;
 var otherSideOk = false;
-var laps = 0;
-
 var lapsTimes = [];
 var startLapTime = (new Date()).getTime();
 
 
 DebugManagement.set({
-	"lap.nbs": laps,
+	"lap.nbs": 0,
 	"lap.15_checkpoint": false,
 	"lap.course_over": false,
-	"lap.max_laps": LapManagement.MAX_LAPS
+	"lap.max_laps": MAX_LAPS
 });
 			
 
-
-LapManagement.onLapFinished = function(fun) {
-	onLapFinisheds.push(fun);
+function lapFinished() {
+	DebugManagement.set({"lap.15_checkpoint": false});
+	DebugManagement.set({"lap.nbs": lapsTimes.length});
+	var now = (new Date()).getTime();
+	lapsTimes.push(now - startLapTime);
+	startLapTime = now;
 }
 
-LapManagement.onFinished = function(fun) {
-	onFinisheds.push(fun);
+
+function raceFinished() {
+	DebugManagement.set({"lap.course_over": true});
+	$win.won = true;
 }
+
 
 CheckPointManagement.onPlaneEntry(2, function() {
 	if(otherSideOk) {
 		otherSideOk = false;
-		laps++;
-		DebugManagement.set({"lap.15_checkpoint": false});
-		DebugManagement.set({"lap.nbs": laps});
-		onLapFinisheds.forEach(function(fun) { fun(laps); });
+		lapFinished();
 		
-		if(laps >= LapManagement.MAX_LAPS) {
-			DebugManagement.set({"lap.course_over": true});
-			onFinisheds.forEach(function(fun) { fun(laps); });
+		if(lapsTimes.length >= MAX_LAPS) {
+			raceFinished();
 		}
 	}
 });
@@ -63,5 +60,28 @@ CheckPointManagement.onPlaneEntry(15, function() {
 	DebugManagement.set({"lap.15_checkpoint": true});
 });
 
+
+var $win = new Vue({
+	el: "#win",
+	data: {
+		won: false
+	}
+})
+
+var $lapsCounter = new Vue({
+	el: "#laps-counter",
+	data: {
+		times: lapsTimes,
+		maxLaps: MAX_LAPS,
+		elapsedTime: 0
+	},
+	computed: {
+		counter: function() { return lapsTimes.length; }
+	}
+});
+
+setInterval(function() {
+	$lapsCounter.elapsedTime = ((new Date()).getTime() - startLapTime)/1000;
+}, 30);
 
 })();
