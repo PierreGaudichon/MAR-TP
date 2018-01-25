@@ -20,7 +20,7 @@ Propeller = class Propeller {
 	constructor(
 			{ x, y, z, rx, ry, rz },
 			{ Loader, helico, renderingEnvironment },
-			{ rotating }
+			{ rotating, isParticles }
 	) {
 		// id 
 		this.id = maxId++;
@@ -34,6 +34,7 @@ Propeller = class Propeller {
 		
 		// rotating
 		this.rotating = rotating;
+		this.isParticles = isParticles;
 		
 		// turbine
 		this.turbine = Loader.load({
@@ -58,15 +59,21 @@ Propeller = class Propeller {
 		];
 		
 		// smoke
-		this.particles = ParticleSystemInitializer.createSystem(
-			renderingEnvironment,
-			{ },
-			{ center: this.position, height: new THREE.Vector3(0, -20, 0) },
-			// { color: { from: ParticleSystemInitializer.RED, to: ParticleSystemInitializer.LIGHT_GREY }}
-			{ color: { from: ParticleSystemInitializer.WHITE, to: ParticleSystemInitializer.WHITE }}
-			// { color: { from: ParticleSystemInitializer.BLACK, to: ParticleSystemInitializer.BLACK }}
-		);
-		
+		if(this.isParticles) {
+			var colors = { from: ParticleSystemInitializer.BLACK, to: ParticleSystemInitializer.WHITE };
+			// var colors = { from: ParticleSystemInitializer.RED, to: ParticleSystemInitializer.RED };
+			// var colors = { from: ParticleSystemInitializer.WHITE, to: ParticleSystemInitializer.WHITE };
+			this.particles = ParticleSystemInitializer.createSystem(
+				renderingEnvironment,
+				{ },
+				{ center: this.position, height: new THREE.Vector3(0, -20, 0), weight: 10 },
+				{ 
+					color: colors,
+					weight: { direction: -1 }
+				}
+			);
+			
+		}
 		
 		// depreciated ?
 		this.dir = true;
@@ -88,7 +95,7 @@ Propeller = class Propeller {
 	
 	tick() {
 		this.blades.forEach(function(blade) { blade.tick(); });
-		this.particles.animate(0.016);
+		if(this.isParticles) this.particles.animate(0.016);
 		/*if(this.rotating) {
 			var speed = 0.02;
 			if(this.dir) { this.position.rotation.z += speed; }

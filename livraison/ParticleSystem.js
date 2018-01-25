@@ -427,11 +427,12 @@ ParticleSystem.ForceModifier_RepellerSegment_Class = function(segment, extent, s
  * 
  * @returns {ForceModifier_Weight_Class}
  */
-ParticleSystem.ForceModifier_Weight_Class = function()
+ParticleSystem.ForceModifier_Weight_Class = function(direction)
 {
+	this.gravityDirection = direction;
 	this.apply = function(particle, dt)
 	{
-		particle.force.add(new THREE.Vector3(0.0,0.0,-particle.mass * Physics.G)) ;
+		particle.force.add(new THREE.Vector3(0.0,0.0,-particle.mass * this.gravityDirection * Physics.G)) ;
 	} ;
 } ;
 
@@ -507,9 +508,14 @@ ParticleSystem.ColorModifier_TimeToDeath_Class = function(startColor, endColor)
 	this.apply = function(particle, dt)
 	{
 		var ratio = particle.currentLifeTime/particle.lifeTime ;
-		particle.color.r = (1.0-ratio)*this.startColor.r+ratio*this.endColor.r ;
-		particle.color.g = (1.0-ratio)*this.startColor.g+ratio*this.endColor.g ;
-		particle.color.b = (1.0-ratio)*this.startColor.b+ratio*this.endColor.b ;
+		particle.color.setRGB(
+			(1.0-ratio)*this.startColor.r+ratio*this.endColor.r,
+			(1.0-ratio)*this.startColor.g+ratio*this.endColor.g,
+			(1.0-ratio)*this.startColor.b+ratio*this.endColor.b
+		);
+		//particle.color.r = (1.0-ratio)*this.startColor.r+ratio*this.endColor.r ;
+		//particle.color.g = (1.0-ratio)*this.startColor.g+ratio*this.endColor.g ;
+		//particle.color.b = (1.0-ratio)*this.startColor.b+ratio*this.endColor.b ;
 	} ;
 } ;
 

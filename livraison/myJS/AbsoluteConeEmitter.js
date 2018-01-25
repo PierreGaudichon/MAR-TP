@@ -95,7 +95,7 @@ function AbsoluteConeEmitter(configuration) {
 	 * @return {position, speed} in which position and speed are instances of THREE.Vector3
 	 */
 	this.createParticle = function() {
-		var mass = 0.1 ;
+		var mass = this.massInterval.random() ;
 		var initialPosition = this.center.getWorldPosition().clone();
 		var initialSpeed = this.direction.clone() ;
 		var modifier = this.directionNormal.clone() ;

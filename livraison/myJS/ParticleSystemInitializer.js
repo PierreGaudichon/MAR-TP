@@ -20,8 +20,9 @@ function createEngine({ }) {
 }
 
 
-function createEmitter({ center, height }) {
+function createEmitter({ center, height, weight }) {
 	if(!height) { height = new THREE.Vector3(0, 0, 10); }
+	if(!weight) { weight = 0.1; }
 	return new AbsoluteConeEmitter({
 		cone: {
 			center,
@@ -31,7 +32,7 @@ function createEmitter({ center, height }) {
 		},
 		particle: {
 			speed: new MathExt.Interval_Class(5, 10),
-			mass: new MathExt.Interval_Class(0.1, 0.3),
+			mass: new MathExt.Interval_Class(weight, weight + 0.2),
 			size: new MathExt.Interval_Class(0.1, 1),
 			lifeTime: new MathExt.Interval_Class(1, 7)
 		}
@@ -40,8 +41,8 @@ function createEmitter({ center, height }) {
 
 
 var createModifier = {
-	weight: function() {
-		return new ParticleSystem.ForceModifier_Weight_Class();
+	weight: function({ direction }) {
+		return new ParticleSystem.ForceModifier_Weight_Class(direction);
 	},
 	lifeTime: function() {
 		return new ParticleSystem.LifeTimeModifier_Class();
@@ -53,9 +54,8 @@ var createModifier = {
 		var linearInterpolator = new Interpolators.Linear_Class(1, 0);
 		return new ParticleSystem.OpacityModifier_TimeToDeath_Class(linearInterpolator);
 	},
-	color: function(config) {
-		console.log(config);
-		return new ParticleSystem.ColorModifier_TimeToDeath_Class(config.from, config.to);
+	color: function({ from, to }) {
+		return new ParticleSystem.ColorModifier_TimeToDeath_Class(from, to);
 	}
 }
 
@@ -65,7 +65,7 @@ function createSystem(renderingEnvironment, engineConfig, emitterConfig, modifie
 	var emitter = createEmitter(emitterConfig);
 	renderingEnvironment.addToScene(engine.particleSystem);
 	engine.addEmitter(emitter);
-	engine.addModifier(createModifier.weight());
+	engine.addModifier(createModifier.weight(modifierConfigs.weight));
 	engine.addModifier(createModifier.lifeTime());
 	engine.addModifier(createModifier.eulerIntegration());
 	engine.addModifier(createModifier.opacity());
@@ -78,9 +78,9 @@ ParticleSystemInitializer = {
 	createSystem,
 	WHITE: { r: 1, g: 1, b: 1 },
 	LIGHT_GREY: { r: 0.9, g: 0.9, b: 0.8 },
-	BLACK: { r: 0.1, g: 0.1, b: 0.1 },
+	BLACK: { r: 0, g: 0, b: 0 },
 	BLUE: { r: 0, g: 0, b: 1 },
-	RED: { r: 0.7, g: 0, b: 0 }
+	RED: { r: 1, g: 0, b: 0 }
 };
 
 

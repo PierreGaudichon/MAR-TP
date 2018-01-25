@@ -125,19 +125,19 @@ function start()
 		var rotationIncrement = 0.05 ;
 		if (currentlyPressedKeys[68]) // (D) Right
 		{
-			renderingEnvironment.scene.rotateOnAxis(new THREE.Vector3(0.0,1.0,0.0), rotationIncrement) ;
+			helico.position.rotateOnAxis(new THREE.Vector3(0, 0, 1), rotationIncrement) ;
 		}
 		if (currentlyPressedKeys[81]) // (Q) Left 
 		{		
-			renderingEnvironment.scene.rotateOnAxis(new THREE.Vector3(0.0,1.0,0.0), -rotationIncrement) ;
+			helico.position.rotateOnAxis(new THREE.Vector3(0, 0, 1), -rotationIncrement) ;
 		}
 		if (currentlyPressedKeys[90]) // (Z) Up
 		{
-			renderingEnvironment.scene.rotateOnAxis(new THREE.Vector3(1.0,0.0,0.0), rotationIncrement) ;
+			helico.position.rotateOnAxis(new THREE.Vector3(1, 0, 0), rotationIncrement) ;
 		}
 		if (currentlyPressedKeys[83]) // (S) Down 
 		{
-			renderingEnvironment.scene.rotateOnAxis(new THREE.Vector3(1.0,0.0,0.0), -rotationIncrement) ;
+			helico.position.rotateOnAxis(new THREE.Vector3(1, 0, 0), -rotationIncrement) ;
 		}
 	}
 

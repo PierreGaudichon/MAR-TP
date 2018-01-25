@@ -41,17 +41,17 @@ Helico = class Helico {
 		this.rightPropeller = new Propeller(
 			{ x: 8.5, y: -3.4, z: 3.8 },
 			{ helico: this, Loader, renderingEnvironment },
-			{ rotating: true }
+			{ rotating: true, isParticles: true }
 		);
 		this.leftPropeller = new Propeller(
 			{ x: -8.5, y: -3.4, z: 3.8 },
 			{ helico: this, Loader, renderingEnvironment },
-			{ rotating: true }
+			{ rotating: true, isParticles: true }
 		);
 		this.centralPropeller = new Propeller(
 			{ x: 0, y: 0, z: 4, rx: Math.PI/2 },
 			{ helico: this, Loader, renderingEnvironment },
-			{ rotating: false }
+			{ rotating: false, isParticles: false }
 		);
 		
 		// rotation
