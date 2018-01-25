@@ -9,11 +9,12 @@ plan du pdf :
 
 (+ DONE, - TODO)
 
+BUGS :
+	- particles deseapars when scene origin is not in camera.
+	- debug is not showing
+	- laps counter not incrementing
+
 FEATURES : 
-	- particles
-	  - understanding system
-	  - parametrizing it in the void
-	  - integration to helico
 	- ghosts
 	  + registering ghost
 	  + several cars
@@ -21,7 +22,7 @@ FEATURES :
 	  - other cars slope
 	- helicopter
 	  + camera
-	  - particles
+	  + particles
 	  + rotating turbines (turnig amortisation)
 	  + moving it (wasd keys, acceleration, friction)
 	  + propellers speed
@@ -29,11 +30,16 @@ FEATURES :
 	- network races
 	  - connection
 	  - socket io
-	- laps
+	+ laps
 	  + checkpoints
 	  + win
 	  + wrong direction
-	  - count time
+	  + count time
+	+ particles
+	  + understanding system
+	  + parametrizing it in the void
+	  + integration to helico
+	  + make beautiful smoke
 	+ refactor
 	+ cameras
 		+ embedded
