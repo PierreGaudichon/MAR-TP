@@ -17,6 +17,8 @@ if(isVue) {
 			enabled: false
 		}
 	});	
+} else {
+	debug = { enabled: false };
 }
 
 DebugManagement.set = function(stuff) {

@@ -33,7 +33,7 @@ requirejs(['ModulesLoaderV2.js'], function() {
 		"myJS/LapManagement.js",
 		"myJS/GhostTrack.js",
 		"myJS/Car.js",
-		"myJS/Helico.js",
+		"myJS/helico/Helico.js",
 		"myJS/MovementManagement.js"
 	]);
 	// Loads modules contained in includes and starts main function
