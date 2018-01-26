@@ -713,6 +713,7 @@ ParticleSystem.Engine_Class = function(configuration)
 	this.particleSystem = new THREE.PointCloud(this.particlesGeometry, this.particlesMaterial);
 	// Activates particles sorting
 	this.particleSystem.sortParticles = true;
+	this.particleSystem.frustumCulled = false;
 
 	/////////////////////
 	// private Methods //

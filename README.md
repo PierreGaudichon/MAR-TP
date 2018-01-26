@@ -10,7 +10,6 @@ plan du pdf :
 (+ DONE, - TODO)
 
 BUGS :
-	- particles deseapars when scene origin is not in camera.
 
 FEATURES : 
 	- ghosts
