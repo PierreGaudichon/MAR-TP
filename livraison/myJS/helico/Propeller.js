@@ -60,13 +60,12 @@ Propeller = class Propeller {
 		
 		// smoke
 		if(this.isParticles) {
-			var colors = { from: ParticleSystemInitializer.YELLOW, to: ParticleSystemInitializer.RED };
 			this.particles = ParticleSystemInitializer.createSystem(
 				renderingEnvironment,
 				{ },
 				{ center: this.position, height: new THREE.Vector3(0, -20, 0), weight: 10 },
 				{ 
-					color: colors,
+					color: { from: ParticleSystemInitializer.YELLOW, to: ParticleSystemInitializer.RED },
 					weight: { direction: -1 }
 				}
 			);

@@ -11,24 +11,26 @@ ModulesLoader.requireModules([
 
 (function() {
 
-function createEngine({ }) {
+function createEngine({ count }) {
+	if(!count) { count = 1000; }
 	return new ParticleSystem.Engine_Class({
-		particlesCount: 1000,
+		particlesCount: count,
 		textureFile: "assets/particles/particle.png",
 		blendingMode: THREE.AdditiveBlending
 	});
 }
 
 
-function createEmitter({ center, height, weight }) {
+function createEmitter({ center, height, weight, flow }) {
 	if(!height) { height = new THREE.Vector3(0, 0, 10); }
 	if(!weight) { weight = 0.1; }
+	if(!flow) { flow = 100; }
 	return new AbsoluteConeEmitter({
 		cone: {
 			center,
 			height,
 			radius: 0.5,
-			flow: 100
+			flow
 		},
 		particle: {
 			speed: new MathExt.Interval_Class(5, 10),
