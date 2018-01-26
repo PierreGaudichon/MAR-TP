@@ -11,7 +11,6 @@ plan du pdf :
 
 BUGS :
 	- particles deseapars when scene origin is not in camera.
-	- debug is not showing
 	- laps counter not incrementing
 
 FEATURES : 
