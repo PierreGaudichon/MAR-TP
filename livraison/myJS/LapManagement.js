@@ -34,6 +34,7 @@ function lapFinished() {
 	var now = (new Date()).getTime();
 	lapsTimes.push(now - startLapTime);
 	startLapTime = now;
+	$lapsCounter.counter++;
 }
 
 
@@ -73,11 +74,9 @@ var $lapsCounter = new Vue({
 	data: {
 		times: lapsTimes,
 		maxLaps: MAX_LAPS,
-		elapsedTime: 0
+		elapsedTime: 0,
+		counter: 0
 	},
-	computed: {
-		counter: function() { return lapsTimes.length; }
-	}
 });
 
 setInterval(function() {
