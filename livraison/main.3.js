@@ -59,8 +59,6 @@ var $wrongDirection;
 function initDomElements() {
 	$chart = $("#chart");
 	$wrongDirection = $("#wrong-direction");
-	//$lapsCounter = $("#laps-counter");
-	//$win = $("#win");
 }
 
 
@@ -310,14 +308,6 @@ function start() {
 	// Events
 	setListeners(arg);	
 	
-	/*LapManagement.onLapFinished(function(n) {
-		$lapsCounter.text(n + " / " + LapManagement.MAX_LAPS);
-	});
-	
-	LapManagement.onFinished(function(n) {
-		$win.css("opacity", 1);
-	})*/
-	
 	CheckPointManagement.onWrongDirection(function() {
 		$wrongDirection.css("opacity", 1);
 		setTimeout(function() {
@@ -330,7 +320,6 @@ function start() {
 	DebugManagement.toggle(true);
 	$(function() {
 		initDomElements();
-		//$lapsCounter.text("0 / " + LapManagement.MAX_LAPS);
 		render(arg); 	
 	});
 	
