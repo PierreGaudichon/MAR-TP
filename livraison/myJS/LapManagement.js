@@ -80,7 +80,7 @@ var $lapsCounter = new Vue({
 });
 
 setInterval(function() {
-	$lapsCounter.elapsedTime = ((new Date()).getTime() - startLapTime)/1000;
+	$lapsCounter.elapsedTime = Math.round(((new Date()).getTime() - startLapTime)/10)/100;
 }, 30);
 
 })();
