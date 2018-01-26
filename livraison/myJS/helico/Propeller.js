@@ -60,9 +60,7 @@ Propeller = class Propeller {
 		
 		// smoke
 		if(this.isParticles) {
-			var colors = { from: ParticleSystemInitializer.BLACK, to: ParticleSystemInitializer.WHITE };
-			// var colors = { from: ParticleSystemInitializer.RED, to: ParticleSystemInitializer.RED };
-			// var colors = { from: ParticleSystemInitializer.WHITE, to: ParticleSystemInitializer.WHITE };
+			var colors = { from: ParticleSystemInitializer.YELLOW, to: ParticleSystemInitializer.RED };
 			this.particles = ParticleSystemInitializer.createSystem(
 				renderingEnvironment,
 				{ },

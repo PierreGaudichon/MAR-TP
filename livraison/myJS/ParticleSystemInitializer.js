@@ -80,7 +80,8 @@ ParticleSystemInitializer = {
 	LIGHT_GREY: { r: 0.9, g: 0.9, b: 0.8 },
 	BLACK: { r: 0, g: 0, b: 0 },
 	BLUE: { r: 0, g: 0, b: 1 },
-	RED: { r: 1, g: 0, b: 0 }
+	RED: { r: 1, g: 0.1, b: 0 },
+	YELLOW : { r: 1, g: 0.5, b: 0 }
 };
 
 
