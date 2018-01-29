@@ -115,7 +115,7 @@ Helico = class Helico {
 		this.setSpeed(this.speed - this.acceleration);
 	}
 	
-	tick() {
+	handleMovementKeys() {
 		// handle helico rotation
 		// shortcuts
 		var propellerRotation = this.rightPropeller.position.rotation.z;
@@ -148,6 +148,10 @@ Helico = class Helico {
 		this.position.position.x -= this.speed * Math.sin(this.position.rotation.z);
 		DebugManagement.set({ "helico.x": this.position.position.x });
 		DebugManagement.set({ "helico.y": this.position.position.y });
+	}
+	
+	tick() {
+		handleMovementKeys();
 		
 		// dispatch ticks
 		this.rightPropeller.tick();
