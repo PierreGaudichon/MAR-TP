@@ -61,6 +61,7 @@ Bezier.cubicdt2 = function([p0, p1, p2, p3]) {
 		var r = new THREE.Vector3(0, 0, 0);
 		add(r, p0, -6*t); add(r, p1, 18*t); add(r, p2, -18*t); add(r, p3, 3*t);
 		add(r, p0, 6); add(r, p1, -12); add(r, p2, 6);
+		return r;
 	};
 };
 
