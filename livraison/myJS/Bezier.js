@@ -64,11 +64,12 @@ Bezier.cubicdt2 = function([p0, p1, p2, p3]) {
 	};
 };
 
+
 // lengthBase :: Control3 -> Number
 // Calculate the length of the bezier curve (cheap, not accurate).
 // https://stackoverflow.com/a/37862545/3765413
 Bezier.lengthBase = function([p0, p1, p2, p3]) {
-	function al(a, b) { a.clone().add(b).length(); }
+	function al(a, b) { return b.clone().sub(a).length(); }
 	var chord = p3.clone().sub(p0).length();
 	var net = al(p0, p1) + al(p1, p2) + al(p2, p3);
 	return (chord + net) / 2;
@@ -76,6 +77,7 @@ Bezier.lengthBase = function([p0, p1, p2, p3]) {
 
 
 // length :: Control3 -> Number
+// calculate the length of the bezier curve (using recustion to make it converge).
 Bezier.length = function(control) {
 	var TOLERANCE = 0.1;
 	var length = Bezier.lengthBase(control);
@@ -91,14 +93,15 @@ Bezier.length = function(control) {
 // Split the bezier curve from start to endpoint.
 // https://stackoverflow.com/a/8405756/3765413
 Bezier.subControls = function(endpoint, [p0, p1, p2, p3]) {
-	var p01 = p1.clone().sub(p0).multiplyScalat(endpoint).add(p0);
-	var p12 = p2.clone().sub(p1).multiplyScalat(endpoint).add(p1);
-	var p23 = p3.clone().sub(p2).multiplyScalat(endpoint).add(p2);
-	var p012 = p12.clone().sub(p01).multiplyScalat(endpoint).add(p01);
-	var p123 = p23.clone().sub(p12).multiplyScalat(endpoint).add(p12);
-	var p0123 = p123.clone().sub(p012).multiplyScalat(endpoint).add(p012);
+	var p01 = p1.clone().sub(p0).multiplyScalar(endpoint).add(p0);
+	var p12 = p2.clone().sub(p1).multiplyScalar(endpoint).add(p1);
+	var p23 = p3.clone().sub(p2).multiplyScalar(endpoint).add(p2);
+	var p012 = p12.clone().sub(p01).multiplyScalar(endpoint).add(p01);
+	var p123 = p23.clone().sub(p12).multiplyScalar(endpoint).add(p12);
+	var p0123 = p123.clone().sub(p012).multiplyScalar(endpoint).add(p012);
 	return [p0, p01, p012, p0123];
 }
+
 
 // subControls :: Number endpoint, Control3 -> [Control3, Control3]
 // Split the bezier curve from start to endpoint. Returns both parts of the splitted curve.
