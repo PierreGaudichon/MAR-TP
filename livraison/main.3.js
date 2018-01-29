@@ -33,7 +33,7 @@ requirejs(['ModulesLoaderV2.js'], function() {
 		"myJS/LapManagement.js",
 		"myJS/GhostTrack.js",
 		"myJS/Car.js",
-		"myJS/helico/Helico.js",
+		"myJS/helico/HelicoKey.js",
 		"myJS/MovementManagement.js"
 	]);
 	// Loads modules contained in includes and starts main function
@@ -280,7 +280,7 @@ function start() {
 	);
 	
 	// Helico
-	var helico = new Helico({ z: 300 }, {Loader, renderingEnvironment});
+	var helico = new HelicoKey({ z: 300 }, {Loader, renderingEnvironment});
 		
 	// Google chart - Gauge - for speed reporting
 	var chartData = createChartData();
