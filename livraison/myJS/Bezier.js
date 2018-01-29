@@ -64,15 +64,28 @@ Bezier.cubicdt2 = function([p0, p1, p2, p3]) {
 	};
 };
 
-// length :: Control3 -> Number
+// lengthBase :: Control3 -> Number
 // Calculate the length of the bezier curve (cheap, not accurate).
 // https://stackoverflow.com/a/37862545/3765413
-Bezier.length = function([p0, p1, p2, p3]) {
+Bezier.lengthBase = function([p0, p1, p2, p3]) {
 	function al(a, b) { a.clone().add(b).length(); }
 	var chord = p3.clone().sub(p0).length();
 	var net = al(p0, p1) + al(p1, p2) + al(p2, p3);
 	return (chord + net) / 2;
 }
+
+
+// length :: Control3 -> Number
+Bezier.length = function(control) {
+	var TOLERANCE = 0.1;
+	var length = Bezier.lengthBase(control);
+	if(length < TOLERANCE) {
+		return length;
+	}
+	var [control1, control2] = Bezier.split(0.5, control);
+	return Bezier.length(control1) + Bezier.length(control2);
+};
+
 
 // subControls :: Number endpoint, Control3 -> Control3
 // Split the bezier curve from start to endpoint.
