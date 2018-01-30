@@ -121,8 +121,8 @@ var cameras = {
 };
 
 
-//var currentIndex = -1;
-var currentIndex = 4;
+var currentIndex = -1;
+// var currentIndex = 4;
 var currentCamera = {};
 
 
