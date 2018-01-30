@@ -28,16 +28,16 @@ var movements = {
 	
 	helico: {
 		right: function(arg) {
-			arg.helico.turnRight();
+			arg.helicoKey.turnRight();
 		},
 		left: function(arg) {
-			arg.helico.turnLeft();
+			arg.helicoKey.turnLeft();
 		},
 		up: function(arg) {
-			arg.helico.speedup();
+			arg.helicoKey.speedup();
 		},
 		down: function(arg) {
-			arg.helico.brake();
+			arg.helicoKey.brake();
 		}
 	}
 }

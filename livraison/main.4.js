@@ -12,8 +12,9 @@ requirejs(['ModulesLoaderV2.js'], function()
 			                              "theirJS/ThreeLoadingEnv.js", 
 			                              "theirJS/navZ.js",
 			                              "FlyingVehicle.js"]) ;
-			ModulesLoader.requireModules(["myJS/helico/Helico.js"]);
-			ModulesLoader.requireModules(["myJS/AbsoluteConeEmitter.js"]);
+			//ModulesLoader.requireModules(["myJS/helico/Helico.js"]);
+			//ModulesLoader.requireModules(["myJS/AbsoluteConeEmitter.js"]);
+			ModulesLoader.requireModules(["myJS/Bezier.js"]);
 			ModulesLoader.requireModules([
 				"ParticleSystem.js",
 				"Interpolators.js",
@@ -50,7 +51,7 @@ function start()
 	renderingEnvironment.camera.position.z = 40 ;
 	
 	// load helico
-	var helico = new Helico({}, {Loader, renderingEnvironment});
+	//var helico = new Helico({}, {Loader, renderingEnvironment});
 	
 	/*
 	// Particles
@@ -97,6 +98,38 @@ function start()
 	var blue = { r: 0, g: 0, b: 1 };
 	var red = { r: 0.7, g: 0, b: 0 }
 	particles.addModifier(new ParticleSystem.ColorModifier_TimeToDeath_Class(red, lightGrey));
+	*/
+
+	var p0 = new THREE.Vector3(-1, 0, 0);
+	var p1 = new THREE.Vector3(-1, 1, 0);
+	var p2 = new THREE.Vector3(1, 1, 0);
+	var p3 = new THREE.Vector3(1, 0, 0);
+	var control = [p0, p1, p2, p3];
+	var position = Bezier.cubic(control);
+	var speed = Bezier.cubicdt(control);
+	var acceleration = Bezier.cubicdt2(control);
+	
+	function draw(color, curve) {
+		var material = new THREE.LineBasicMaterial({ color });
+		var geometry = new THREE.Geometry();
+		geometry.vertices = Bezier.interpolate(curve, 50);
+		var line = new THREE.Line(geometry, material);
+		renderingEnvironment.addToScene(line);		
+	}
+	
+	console.log(Bezier.interpolate(acceleration, 50));
+	draw(0x0000ff, position);
+	draw(0xff0000, speed);
+	draw(0x00ff00, acceleration);
+	
+	/*
+	var cl = function(o) { console.log(JSON.stringify(o)); };
+	cl(Bezier.lengthBase(control));
+	cl(control);
+	var [a, b] = Bezier.split(0.5, control);
+	cl([Bezier.lengthBase(a), Bezier.lengthBase(b)])
+	cl([a, b]);
+	cl(Bezier.length(control));
 	*/
 	
 	
@@ -152,7 +185,7 @@ function start()
 	function render() { 
 		requestAnimationFrame( render );
 		handleKeys();
-		helico.tick();
+		//helico.tick();
 		// particles.animate(0.016);
 		// rotating.rotation.y += 1/60;
 		

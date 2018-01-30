@@ -34,7 +34,8 @@ requirejs(['ModulesLoaderV2.js'], function() {
 		"myJS/GhostTrack.js",
 		"myJS/Car.js",
 		"myJS/helico/HelicoKey.js",
-		"myJS/MovementManagement.js"
+		"myJS/MovementManagement.js",
+		"myJS/helico/HelicoBezier.js"
 	]);
 	// Loads modules contained in includes and starts main function
 	ModulesLoader.loadModules(start) ;
@@ -190,7 +191,8 @@ function render(arg) {
 	CameraManagement.render(arg);
 	GhostTrack.add({x: arg.NAV.x, y: arg.NAV.y, z: arg.NAV.z, theta: arg.car.rotationZ.rotation.z});
 	GhostTrack.move();
-	arg.helico.tick();
+	arg.helicoKey.tick();
+	arg.helicoBezier.tick();
 	
 	arg.chartData.setValue(0, 1, SpeedManagement.speed());
 	arg.chart.draw(arg.chartData, arg.chartOptions);
@@ -279,8 +281,15 @@ function start() {
 			{renderingEnvironment, Loader}
 	);
 	
-	// Helico
-	var helico = new HelicoKey({ z: 300 }, {Loader, renderingEnvironment});
+	// Helico Key
+	var helicoKey = new HelicoKey({ z: 300 }, {Loader, renderingEnvironment});
+	
+	// Helico Bezier
+	var controls = [
+		[[-300, 0, 250], [-300, 200, 250], [300, 200, 250], [300, 0, 250]],
+		[[300, 0, 250], [300, -200, 250], [-300, -200, 250], [-300, 0, 250]]
+	].map((control) => control.map(([ x, y, z ]) => new THREE.Vector3(x, y, z)));
+	var helicoBezier = new HelicoBezier(controls, {Loader, renderingEnvironment})
 		
 	// Google chart - Gauge - for speed reporting
 	var chartData = createChartData();
@@ -291,7 +300,7 @@ function start() {
 		currentlyPressedKeys,
 		//CARx, CARy, CARz, CARtheta,
 		renderingEnvironment, Lights, Loader, NAV,
-		car, helico,
+		car, helicoKey, helicoBezier,
 		//vehicle, carPosition, carFloorSlope, carRotationZ, carGeometry,
 		chartData, chartOptions, chart
 	};

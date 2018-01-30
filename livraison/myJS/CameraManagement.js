@@ -86,9 +86,9 @@ var cameras = {
 		}
 	},
 	
-	helico: {
+	helicoKey: {
 		load: function(arg) {
-			arg.helico.corp.add(arg.renderingEnvironment.camera);
+			arg.helicoKey.corp.add(arg.renderingEnvironment.camera);
 			arg.renderingEnvironment.camera.position.x = 0;
 			arg.renderingEnvironment.camera.position.y = -40;
 			arg.renderingEnvironment.camera.position.z = 40;
@@ -98,16 +98,31 @@ var cameras = {
 			MovementManagement.current = MovementManagement.HELICO;
 		},
 		unload: function(arg) {
-			arg.helico.corp.remove(arg.renderingEnvironment.camera);
+			arg.helicoKey.corp.remove(arg.renderingEnvironment.camera);
 			MovementManagement.current = MovementManagement.CAR;
 		}
-	}
+	},
+	
+	helicoBezier: {
+		load: function(arg) {
+			arg.helicoBezier.corp.add(arg.renderingEnvironment.camera);
+			arg.renderingEnvironment.camera.position.x = 0;
+			arg.renderingEnvironment.camera.position.y = -40;
+			arg.renderingEnvironment.camera.position.z = 40;
+			arg.renderingEnvironment.camera.rotation.x = Math.PI * (45/180);
+			arg.renderingEnvironment.camera.rotation.y = 0;
+			arg.renderingEnvironment.camera.rotation.z = 0;
+		},
+		unload: function(arg) {
+			arg.helicoBezier.corp.remove(arg.renderingEnvironment.camera);
+		}
+	},
 	
 };
 
 
 //var currentIndex = -1;
-var currentIndex = 3;
+var currentIndex = 4;
 var currentCamera = {};
 
 
