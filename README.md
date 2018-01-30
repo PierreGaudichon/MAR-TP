@@ -6,10 +6,17 @@ plan du pdf :
 	- haut : y, bas : -y
 
 
+Rendu
+- mettre la camera voiture par defaut
+- enlever les ghosts
+- mettre des switch dans le main
+
+
 
 (+ DONE, - TODO)
 
 BUGS :
+  - la vitesse sur la courbe de Bezier est inversé sur la 2eme partie de la courbe.
 
 FEATURES : 
 	- ghosts
@@ -17,16 +24,16 @@ FEATURES :
 	  + several cars
 	  - z axis
 	  - other cars slope
-	- helicopter
+	- network races
+	  - connection
+	  - socket io
+	+ helicopter
 	  + camera
 	  + particles
 	  + rotating turbines (turnig amortisation)
 	  + moving it (wasd keys, acceleration, friction)
 	  + propellers speed
-	  - bezier curve
-	- network races
-	  - connection
-	  - socket io
+	  + bezier curve
 	+ laps
 	  + checkpoints
 	  + win
