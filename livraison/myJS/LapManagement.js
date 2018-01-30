@@ -32,7 +32,7 @@ function lapFinished() {
 	DebugManagement.set({"lap.15_checkpoint": false});
 	DebugManagement.set({"lap.nbs": lapsTimes.length});
 	var now = (new Date()).getTime();
-	lapsTimes.push(now - startLapTime);
+	lapsTimes.push((now - startLapTime)/1000);
 	startLapTime = now;
 	$lapsCounter.counter++;
 }
